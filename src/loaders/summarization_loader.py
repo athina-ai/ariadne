@@ -1,7 +1,7 @@
 from .loader import Loader
 import json
 
-class TextSummarizationLoader(Loader):
+class SummarizationLoader(Loader):
     """
     A data loader for text summarization datasets.
 
@@ -63,9 +63,6 @@ class TextSummarizationLoader(Loader):
     def load_json(self, filename: str) -> None:
         """
         Loads and processes data from a JSON file.
-
-        Args:
-            filename (str): Path to the JSON file.
         
         Raises:
             FileNotFoundError: If the specified JSON file is not found.
@@ -79,12 +76,7 @@ class TextSummarizationLoader(Loader):
             print(f"Error loading JSON: {e}")
     
     def load(self, data: list) -> None:
-        """
-        Loads and processes data from a list of dictionaries.
-
-        Args:
-            data (list): List of dictionaries containing dataset entries.
-        """
+        """Loads and processes data from a list of dictionaries."""
         self._raw_dataset = data
         self.process()
         

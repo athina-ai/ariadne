@@ -1,11 +1,13 @@
 
+from src.loaders.summarization_loader import SummarizationLoader
 
-from src.loaders.text_summarization_loader import TextSummarizationLoader
+from src.evaluators.summarization_hallucination_evaluator import SummarizationHallucinationEvaluator
+
 
 input_filepath = 'data/text_summarization/xsum_sample.json'
-
-text_summarization_loader = TextSummarizationLoader(col_document = 'document', col_summary = 'summary',  col_label = 'hallucination_type', col_comment = 'hallucinated_span')
-
+text_summarization_loader = SummarizationLoader(col_document = 'document', col_summary = 'summary',  col_label = 'hallucination_type', col_comment = 'hallucinated_span')
 text_summarization_loader.load_json(input_filepath)
-
 print(text_summarization_loader.processed_dataset)
+
+text_summarization_evaluator = SummarizationHallucinationEvaluator(text_summarization_loader)
+text_summarization_evaluator.run()
