@@ -9,13 +9,22 @@ To install, simply download the library and include it in your project.
 ```bash
 pip install ariadneai
 ```
+## Prerequisi
+
+
 
 ## Usage
 Here's a simple usage example to load a json file for text summarization.
 ```python
 loader = TextSummarizationLoader()
 loader.load_json("path_to_your_file.json")
-print(loader.processed_dataset)
+text_summarization_evaluator = SummarizationHallucinationEvaluator(text_summarization_loader)
+text_summarization_evaluator.run()
+```
+or run
+
+```python
+ poetry run python main.py
 ```
 
 ## License
