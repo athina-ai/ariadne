@@ -6,8 +6,8 @@ class Loader(ABC):
     """Abstract base class for data loaders."""
 
     @abstractmethod
-    def load_json(self, filename: str) -> None:
-        """Load data from a JSON file."""
+    def load(self, filename: str) -> None:
+        """Load data in the specified format."""
         pass
 
     @abstractmethod

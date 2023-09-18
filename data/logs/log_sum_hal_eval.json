@@ -63,30 +63,30 @@
         "document": "More than 20 competitors are due to take part in Saturday's event in Carrbridge in the Cairngorms.\nCarvers from Scotland, England, Ireland as well as continental Europe, Canada and the US regularly enter the competition.\nThey can use only chainsaws - any other carving tool is banned - to carve logs into the shapes of animals and people.\nLast year's winner Pete Bowsher, from Moffat, is to return to defend the title, and retain the first place winner's prize the Claymore Trophy.",
         "summary": "this year\\'s northern ireland car championships will take place at this year\\'s ballymena festival.",
         "questions": {
-            "question 1": "Will the northern ireland car championships take place at this year's ballymena festival?",
-            "question 2": "Is this year's ballymena festival hosting the northern ireland car championships?",
-            "question 3": "Are the northern ireland car championships happening in northern ireland this year?",
-            "question 4": "Is the ballymena festival happening this year?",
-            "question 5": "Will the ballymena festival host any car championships this year?"
+            "question 1": "Will this year's northern ireland car championships take place at this year's ballymena festival?",
+            "question 2": "Is this year's northern ireland car championships happening in Northern Ireland?",
+            "question 3": "Is the ballymena festival happening this year?",
+            "question 4": "Are the northern ireland car championships a part of the ballymena festival?",
+            "question 5": "Will the ballymena festival host any other events besides the northern ireland car championships?"
         },
         "answers_doc": {
             "question 1": "No",
-            "question 2": "No",
+            "question 2": "Unknown",
             "question 3": "Unknown",
-            "question 4": "Unknown",
+            "question 4": "No",
             "question 5": "Unknown"
         },
         "answers_sum": {
             "question 1": "Yes",
             "question 2": "Yes",
-            "question 3": "Yes",
+            "question 3": "Unknown",
             "question 4": "Unknown",
-            "question 5": "Yes"
+            "question 5": "Unknown"
         },
         "hallucination_type": "extrinsic",
         "comment": "this year\\'s northern ireland car championships will take place at this year\\'s ballymena festival",
-        "agreement_score": 0.2,
-        "hallucination_score": 0.4,
+        "agreement_score": 0.4,
+        "hallucination_score": 0.2,
         "contradiction_score": 0.4
     }
 ]

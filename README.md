@@ -16,8 +16,8 @@ pip install ariadneai
 ## Usage
 Here's a simple usage example to load a json file for text summarization.
 ```python
-loader = TextSummarizationLoader()
-loader.load_json("path_to_your_file.json")
+loader = TextSummarizationLoader(format = 'json')
+loader.load("path_to_your_file.json")
 text_summarization_evaluator = SummarizationHallucinationEvaluator(text_summarization_loader)
 text_summarization_evaluator.run()
 ```
