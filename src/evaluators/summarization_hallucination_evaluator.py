@@ -3,7 +3,7 @@ from ..loaders.summarization_loader import SummarizationLoader
 from ..metrics.aggreement_score import AgreementScore 
 from ..metrics.contradiction_score import ContradictionScore
 from ..metrics.hallucination_score import HallucinationScore 
-from ..publishers.json_publisher import JSONPublisher
+from ..publishers.publisher_log import PublisherLog
 from ..llms.question_generator import QuestionGenerator
 from ..llms.question_answerer import QuestionAnswerer
 
@@ -27,9 +27,8 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         'contradiction_score': ContradictionScore
     }
 
-    def __init__(self, loader, log_filepath='data/logs/log_sum_hal_eval.json', n_questions=5, 
-                 llm_model='gpt-3.5-turbo', 
-                 metrics=['agreement_score', 'hallucination_score', 'contradiction_score']):
+    def __init__(self, loader, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', n_questions=5, 
+                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'hallucination_score', 'contradiction_score']):
         """
         Initialize the evaluator with given parameters.
 
@@ -50,7 +49,8 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         self.question_generator = QuestionGenerator(llm_model, n_questions)
         self.question_answerer = QuestionAnswerer(llm_model)
         # Initialize logging
-        self.publisher_log = JSONPublisher(log_filepath)
+        
+        self.publisher_log = PublisherLog(log_filepath, log_format)
         self.logs = []
         self.metrics = metrics
 

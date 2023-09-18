@@ -13,7 +13,7 @@ text_summarization_loader = SummarizationLoader(
 )
 
 # Load data from the specified JSON file
-text_summarization_loader.load_json(input_filepath)
+text_summarization_loader.load(input_filepath)
 
 # Create an evaluator object using the loaded data
 text_summarization_evaluator = SummarizationHallucinationEvaluator(text_summarization_loader)

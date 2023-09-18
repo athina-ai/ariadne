@@ -4,10 +4,10 @@
         "summary": "a fracking operation in lancashire has been suspended after a gas leak was found at the site.",
         "questions": {
             "question 1": "Was a fracking operation in Lancashire suspended?",
-            "question 2": "Was the suspension due to a gas leak?",
-            "question 3": "Was the gas leak found at the fracking site?",
-            "question 4": "Is the fracking operation still ongoing?",
-            "question 5": "Is the gas leak the reason for the suspension?"
+            "question 2": "Was a gas leak found at the fracking site in Lancashire?",
+            "question 3": "Is the fracking operation still ongoing in Lancashire?",
+            "question 4": "Was the gas leak the reason for the suspension of the fracking operation?",
+            "question 5": "Has the gas leak been resolved at the fracking site in Lancashire?"
         },
         "answers_doc": {
             "question 1": "Yes",
@@ -19,9 +19,9 @@
         "answers_sum": {
             "question 1": "Yes",
             "question 2": "Yes",
-            "question 3": "Yes",
-            "question 4": "Unknown",
-            "question 5": "Yes"
+            "question 3": "No",
+            "question 4": "Yes",
+            "question 5": "Unknown"
         },
         "hallucination_type": NaN,
         "comment": NaN,

@@ -16,7 +16,7 @@ class SummarizationLoader(Loader):
     """
     
     def __init__(self, col_document='document', col_summary='summary', 
-                 col_label=None, col_comment=None):
+                 col_label=None, col_comment=None, format = 'json'):
         """ Initializes the loader with specified or default column names."""
         self.col_document = col_document
         self.col_summary = col_summary
@@ -24,6 +24,7 @@ class SummarizationLoader(Loader):
         self.col_comment = col_comment
         self._raw_dataset = {}
         self._processed_dataset = []
+        self.format = format
 
     @property
     def processed_dataset(self):
@@ -75,10 +76,19 @@ class SummarizationLoader(Loader):
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"Error loading JSON: {e}")
     
-    def load(self, data: list) -> None:
+    def load_dict(self, data: list) -> None:
         """Loads and processes data from a list of dictionaries."""
         self._raw_dataset = data
         self.process()
+
+    def load(self, data: list) -> None:
+        if self.format == 'json':
+            self.load_json(data)
+        elif self.format == 'dict':
+            self.load_dict(data)
+        else:
+            raise NotImplementedError("This file format has not been supported yet.")
+    
         
     def load_csv(self) -> None:
         """
