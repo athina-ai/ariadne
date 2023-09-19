@@ -30,3 +30,12 @@ def test_loader_renames_documnet_summary_columns():
     processed_data = text_summarization_loader.processed_dataset
     assert(processed_data[0]["document"] == test_data[0]["doc"] )
     assert(processed_data[0]["summary"] == test_data[0]["sum"] )
+
+
+
+def test_loader_instance():
+    text_summarization_loader = SummarizationLoader()
+    text_summarization_loader.load_response(document= 'doc', summary='sum')
+    processed_data = text_summarization_loader.processed_dataset
+    assert(processed_data[0]["document"] == 'doc' )
+    assert(processed_data[0]["summary"] == 'sum' )

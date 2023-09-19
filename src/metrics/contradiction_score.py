@@ -29,12 +29,10 @@ class ContradictionScore(Metric):
         """
         answers_src_ls = list(answers_src.values())
         answers_sum_ls = list(answers_sum.values())
-        
-        n_contradiction = sum(
-            1 for ans_src, ans_sum in zip(answers_src_ls, answers_sum_ls)
-            if ans_src.strip().lower() in ['yes', 'no'] 
-            and ans_src.strip().lower() != ans_sum.strip().lower()
-        )
+        n_contradiction = 0
+        for ans_src, ans_sum in zip(answers_src_ls, answers_sum_ls):
+            if ans_src.strip().lower() in ['yes', 'no'] and  ans_src.strip().lower() != ans_sum.strip().lower():
+                n_contradiction += 1
         return n_contradiction
 
     @staticmethod

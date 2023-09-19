@@ -81,7 +81,18 @@ class SummarizationLoader(Loader):
         self._raw_dataset = data
         self.process()
 
+    def load_response(self, document, summary, comment = None, label = None) -> None:
+        """Loads and processes a response of text summarization"""
+        processed_instance = {'document': document, 'summary': summary}
+        if comment is not None:
+            processed_instance['comment'] =comment
+        if label is not None:
+            processed_instance['label'] =comment
+        self._raw_dataset = [processed_instance]
+        self.process()
+
     def load(self, data: list) -> None:
+        """" """
         if self.format == 'json':
             self.load_json(data)
         elif self.format == 'dict':
