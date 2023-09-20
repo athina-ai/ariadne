@@ -14,14 +14,17 @@ class OpenAICompletion:
     - temperature (float): OpenAI temperature setting.
     - max_tokens (int): OpenAI maximum number of tokens setting. The token count of your prompt plus max_tokens cannot exceed the model's context.
     """
-    def __init__(self, model="gpt-3.5-turbo", temperature=0, max_tokens=1500):
+    def __init__(self, model, open_ai_key, temperature=0, max_tokens=1500):
         """
         Initializes the OpenAICompletion with the provided settings.
         """
         # Setting instance attributes based on provided parameters or defaults
         load_dotenv()
         self.model = model
-        self.open_ai_key = os.getenv("OPENAI_API_KEY")
+        if open_ai_key is None:
+            self.open_ai_key = os.getenv("OPENAI_API_KEY")
+        else:
+            self.open_ai_key = open_ai_key
         self.temperature = temperature
         self.max_tokens = max_tokens
         
@@ -44,7 +47,9 @@ class OpenAICompletion:
             # In case of a rate limit error, wait for 5 seconds and retry
             time.sleep(5)
             return self.get_completion_from_messages(messages)
-        
+        except openai.error.AuthenticationError:
+            raise openai.error.AuthenticationError("Please pass a valid OpenAi key.")
+
         # Returning the content of the first choice from the model's response
         return response.choices[0].message["content"]
 

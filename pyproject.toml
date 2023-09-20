@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "magik-eval"
-version = "0.1.0"
+name = "ariadne-ai"
+version = "0.1.1"
 description = ""
 authors = ["Christos <chziakas@gmail.com>"]
 readme = "README.md"

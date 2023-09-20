@@ -28,7 +28,7 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
     }
 
     def __init__(self, loader, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', n_questions=5, 
-                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'hallucination_score', 'contradiction_score']):
+                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'hallucination_score', 'contradiction_score'], open_ai_key = None):
         """
         Initialize the evaluator with given parameters.
 
@@ -46,11 +46,11 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.n_questions = n_questions
-        self.question_generator = QuestionGenerator(llm_model, n_questions)
-        self.question_answerer = QuestionAnswerer(llm_model)
+        self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
+        self.question_answerer = QuestionAnswerer(llm_model, open_ai_key)
         # Initialize logging
-        
         self.publisher_log = PublisherLog(log_filepath, log_format)
+
         self.logs = []
         self.metrics = metrics
 

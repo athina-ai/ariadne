@@ -24,11 +24,11 @@ class QuestionAnswerer:
         3. Return a JSON object in the following format: "question1": "answer1", "question2": "answer2",...
     """
 
-    def __init__(self, model):
+    def __init__(self, model, open_ai_key):
         """
         Initialize the QuestionAnswerer class.
         """
-        self.openAIcompletion = OpenAICompletion(model)
+        self.openAIcompletion = OpenAICompletion(model, open_ai_key)
 
     def answer(self, questions: str, context: str) -> dict:
         """

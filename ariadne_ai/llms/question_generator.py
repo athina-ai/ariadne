@@ -21,12 +21,12 @@ class QuestionGenerator:
         3. Return a JSON object in the following format: "question 1": 'Your question', "question 2": 'Your next question', ...
     """
 
-    def __init__(self, model: str, n_questions: int = 5):
+    def __init__(self, model: str, n_questions: int, open_ai_key:str):
         """
         Initialize the QuestionGenerator.
         """
         self.n_questions = n_questions
-        self.openAIcompletion = OpenAICompletion(model)
+        self.openAIcompletion = OpenAICompletion(model, open_ai_key)
 
     def generate(self, text: str) -> dict:
         """

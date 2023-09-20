@@ -7,11 +7,8 @@ AriadneAI is an open-source library for evaluating LLM applications on text summ
 To install, simply download the library and include it in your project.
 
 ```bash
-pip install ariadneai
+pip install ariadne-ai
 ```
-## Prerequisi
-
-
 
 ## Usage
 Here's a simple usage example to load a json file for text summarization.
