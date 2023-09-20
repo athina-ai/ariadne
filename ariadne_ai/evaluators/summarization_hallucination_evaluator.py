@@ -80,7 +80,6 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             'answers_doc': answers_doc,
             'answers_sum': answers_sum,
             'hallucination_type': instance['label'],
-            'comment': instance['comment'],
             **metric_results
         }
 

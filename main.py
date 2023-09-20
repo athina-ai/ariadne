@@ -14,8 +14,7 @@ open_ai_key = None
 text_summarization_loader = SummarizationLoader(
     col_document='document', 
     col_summary='summary', 
-    col_label='hallucination_type', 
-    col_comment='hallucinated_span'
+    col_label='hallucination_type'
 )
 
 # Load data from the specified JSON file
