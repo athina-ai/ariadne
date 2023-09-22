@@ -1,5 +1,5 @@
 ## Overview
-Ariadne AI is an open-source library for evaluating LLM applications. The goal of the library is to provide LLM evaluators for RAG chatbots, text summarization, and LLM agents. Each evaluator is paired with metrics that help developers evaluate their LLMs and detect the reason for their failure cases. If labeled data available, machine learning metrics such as accuracy, recall, and precision can be also computed. The library also supports any evaluations for specialized tasks such as sentiment detection and PII detection within any LLM input and output. 
+Ariadne AI is an open-source library for evaluating text summarization without the necessity for human-annotated reference summaries. Each evaluator is paired with metrics that help developers evaluate their LLMs and detect the reason for their failure cases. Our approach is a question-answer generation (QAG) framework, which allows us to pinpoint failure cases in production without human-annotated reference summaries. 
 
 
 ## Installation
@@ -26,8 +26,6 @@ or run
 ## Text Summarization
 
 ![Text Summarization QAG Approach](docs/QAG_approach.png)
-
-Our approach is a question-answer generation (QAG) framework, which allows us to pinpoint failure cases in production without the necessity for human-annotated reference summaries. 
 
 Here is a breakdown of our approach:
 
