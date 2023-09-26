@@ -42,6 +42,7 @@ class SummarizationLoader(Loader):
         
         Raises:
             KeyError: If mandatory columns (document or summary) are missing in the raw dataset.
+            KeyError: If optional columns (label or comment) are missing in the raw dataset if defined.
         """
         for raw_instance in self._raw_dataset:
             # Check for mandatory columns in raw_instance
@@ -49,16 +50,19 @@ class SummarizationLoader(Loader):
                 raise KeyError(f"'{self.col_document}' not found in provided data.")
             if self.col_summary not in raw_instance:
                 raise KeyError(f"'{self.col_summary}' not found in provided data.")
-            
+            # Create a processed instance with mandatory fields
             processed_instance = {
                 'document': raw_instance[self.col_document],
                 'summary': raw_instance[self.col_summary]
             }
-            if self.col_comment and self.col_comment in raw_instance:
-                processed_instance['comment'] = raw_instance[self.col_comment]
-            if self.col_label and self.col_label in raw_instance:
+
+           # Add optional attributes if they exist
+            if self.col_label is not None and self.col_label in raw_instance:
                 processed_instance['label'] = raw_instance[self.col_label]
-        
+            if self.col_comment is not None and self.col_comment in raw_instance:
+                processed_instance['comment'] = raw_instance[self.col_comment]
+
+            # Store the results
             self._processed_dataset.append(processed_instance)
 
     def load_json(self, filename: str) -> None:
@@ -83,12 +87,12 @@ class SummarizationLoader(Loader):
 
     def load_response(self, document, summary, comment = None, label = None) -> None:
         """Loads and processes a response of text summarization"""
-        processed_instance = {'document': document, 'summary': summary}
+        raw_instance = {'document': document, 'summary': summary}
         if comment is not None:
-            processed_instance['comment'] =comment
+            raw_instance['comment'] =comment
         if label is not None:
-            processed_instance['label'] =comment
-        self._raw_dataset = [processed_instance]
+            raw_instance['label'] =comment
+        self._raw_dataset = [raw_instance]
         self.process()
 
     def load(self, data: list) -> None:
@@ -119,11 +123,4 @@ class SummarizationLoader(Loader):
         """
         raise NotImplementedError("This method has not been implemented yet.")
 
-    def load_magik(self) -> None:
-        """
-        Placeholder for loading data from the Magik system.
-
-        Raises:
-            NotImplementedError: This method has not been implemented yet.
-        """
-        raise NotImplementedError("This method has not been implemented yet.")
+   

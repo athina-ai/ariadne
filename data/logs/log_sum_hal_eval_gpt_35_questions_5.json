@@ -23,24 +23,53 @@
             "question 4": "Yes",
             "question 5": "Unknown"
         },
-        "hallucination_type": NaN,
+        "label": NaN,
         "agreement_score": 0.4,
         "hallucination_score": 0.6,
         "contradiction_score": 0.0
     },
     {
-        "document": "He spent last season in charge of the Under-20 development squad, but will not return for the start of pre-season training.\nRangers manager Mark Warburton wants to alter the coaching personnel, leaving Durrant without a position at Ibrox.\nHe spent 14 years as a player at Rangers, before returning as a coach in 2005.\nDurrant held several positions in the youth set-up, then stepped up to work with the first team during Walter Smith's second spell as manager in 2007.\nHe was first-team coach when Ally McCoist succeeded Smith in 2011, then returned to working with the youths again after McCoist resigned during season 2014-15.",
-        "summary": "rangers have appointed ex-rangers boss walter smith as first-team coach.",
+        "document": "Tries from Macgraff Leuluai, Ah Van and Chris Bridge gave Widnes a 14-6 half-time lead, with Cas loanee Paddy Flynn responding against his parent club.\nFlynn scored another early in the second, but Ah Van, Lloyd White (2) and Joe Mellor tries made it 38-12.\nDespite three Cas tries in four minutes - Larne Patrick, Luke Gale and Flynn's hat-trick score - Widnes held on.\nThe Vikings' victory had looked assured when Mellor took advantage of Castleford indecision on a short kick-off, running straight through to help them to a 26-point lead.\nBut, having lost nine of their previous 10 matches, their defence creaked as they let Patrick, who has just signed a three-year deal to move from Huddersfield after his loan spell, in for a try.\nGale and Flynn - on loan at Castleford from the Vikings until the end of the season - made it a nervy finish, but the Tigers suffered their fourth consecutive home league defeat.\nWidnes moved above Wakefield into seventh, while Castleford remain in sixth, one point above the Vikings.\nCastleford: Solomona, Monaghan, Crooks, Webster, Flynn, McShane, Gale, Jewitt, Milner, Patrick, Moors, McMeeken, Massey.\nReplacements: Millington, Springer, Tickle, Cook.\nWidnes: Hanbury, Thompson, Runciman, Bridge, Ah Van, Mellor,Brown, Cahill, White, Buchanan, Whitley, Dean, Leuluai.\nReplacements: J. Chapelhow, Manuokafoa, Walker, Heremaia.\nReferee: J Smith",
+        "summary": "widnes suffered their first defeat of the season as widnes won at home to widnes.",
         "questions": {
-            "question 1": "Has Walter Smith been appointed as the first-team coach for Rangers?",
-            "question 2": "Is Walter Smith a former Rangers boss?",
-            "question 3": "Is Walter Smith the new coach for Rangers?",
-            "question 4": "Is Walter Smith the first-team coach for Rangers?",
-            "question 5": "Has Rangers hired Walter Smith as their coach?"
+            "question 1": "Did Widnes suffer their first defeat of the season?",
+            "question 2": "Did Widnes win at home?",
+            "question 3": "Did Widnes win against Widnes?",
+            "question 4": "Did Widnes win their first game of the season?",
+            "question 5": "Did Widnes suffer any defeats before this game?"
         },
         "answers_doc": {
             "question 1": "No",
-            "question 2": "Unknown",
+            "question 2": "Yes",
+            "question 3": "No",
+            "question 4": "No",
+            "question 5": "Yes"
+        },
+        "answers_sum": {
+            "question 1": "Yes",
+            "question 2": "Yes",
+            "question 3": "No",
+            "question 4": "No",
+            "question 5": "Unknown"
+        },
+        "label": "intrinsic",
+        "agreement_score": 0.6,
+        "hallucination_score": 0.0,
+        "contradiction_score": 0.4
+    },
+    {
+        "document": "More than 20 competitors are due to take part in Saturday's event in Carrbridge in the Cairngorms.\nCarvers from Scotland, England, Ireland as well as continental Europe, Canada and the US regularly enter the competition.\nThey can use only chainsaws - any other carving tool is banned - to carve logs into the shapes of animals and people.\nLast year's winner Pete Bowsher, from Moffat, is to return to defend the title, and retain the first place winner's prize the Claymore Trophy.",
+        "summary": "this year\\'s northern ireland car championships will take place at this year\\'s ballymena festival.",
+        "questions": {
+            "question 1": "Will the northern ireland car championships take place at this year's ballymena festival?",
+            "question 2": "Is this year's ballymena festival hosting the northern ireland car championships?",
+            "question 3": "Are the northern ireland car championships happening in northern ireland this year?",
+            "question 4": "Is the ballymena festival happening this year?",
+            "question 5": "Will the ballymena festival host any car championships this year?"
+        },
+        "answers_doc": {
+            "question 1": "No",
+            "question 2": "No",
             "question 3": "Unknown",
             "question 4": "Unknown",
             "question 5": "Unknown"
@@ -49,41 +78,12 @@
             "question 1": "Yes",
             "question 2": "Yes",
             "question 3": "Yes",
-            "question 4": "Yes",
+            "question 4": "Unknown",
             "question 5": "Yes"
         },
-        "hallucination_type": "intrinsic",
-        "agreement_score": 0.0,
-        "hallucination_score": 0.8,
-        "contradiction_score": 0.2
-    },
-    {
-        "document": "More than 20 competitors are due to take part in Saturday's event in Carrbridge in the Cairngorms.\nCarvers from Scotland, England, Ireland as well as continental Europe, Canada and the US regularly enter the competition.\nThey can use only chainsaws - any other carving tool is banned - to carve logs into the shapes of animals and people.\nLast year's winner Pete Bowsher, from Moffat, is to return to defend the title, and retain the first place winner's prize the Claymore Trophy.",
-        "summary": "this year\\'s northern ireland car championships will take place at this year\\'s ballymena festival.",
-        "questions": {
-            "question 1": "Will this year's northern ireland car championships take place at this year's ballymena festival?",
-            "question 2": "Is this year's northern ireland car championships happening in Northern Ireland?",
-            "question 3": "Is the ballymena festival happening this year?",
-            "question 4": "Are the northern ireland car championships a part of the ballymena festival?",
-            "question 5": "Will the ballymena festival host any other events besides the northern ireland car championships?"
-        },
-        "answers_doc": {
-            "question 1": "No",
-            "question 2": "Unknown",
-            "question 3": "Unknown",
-            "question 4": "No",
-            "question 5": "Unknown"
-        },
-        "answers_sum": {
-            "question 1": "Yes",
-            "question 2": "Yes",
-            "question 3": "Unknown",
-            "question 4": "Unknown",
-            "question 5": "Unknown"
-        },
-        "hallucination_type": "extrinsic",
-        "agreement_score": 0.4,
-        "hallucination_score": 0.2,
+        "label": "extrinsic",
+        "agreement_score": 0.2,
+        "hallucination_score": 0.4,
         "contradiction_score": 0.4
     }
 ]
