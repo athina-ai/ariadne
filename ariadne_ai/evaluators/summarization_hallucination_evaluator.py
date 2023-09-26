@@ -79,7 +79,6 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             'questions': questions,
             'answers_doc': answers_doc,
             'answers_sum': answers_sum,
-            'hallucination_type': instance['label'],
             **metric_results
         }
 
@@ -89,3 +88,4 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             log = self._evaluate_element(instance)
             self.logs.append(log)
         self.publisher_log.write(self.logs)
+        return self.logs
