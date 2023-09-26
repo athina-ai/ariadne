@@ -1,0 +1,26 @@
+Number of Questions: 5
+Model: gpt-3.5-turbo-16k
+
+Number of instances per Label:
+nan: 1
+intrinsic: 1
+extrinsic: 1
+total: 3
+
+Average agreement_score per Label:
+nan: 0.4
+intrinsic: 0.6
+extrinsic: 0.4
+overall: 0.4666666666666666
+
+Average hallucination_score per Label:
+nan: 0.6
+intrinsic: 0.0
+extrinsic: 0.2
+overall: 0.26666666666666666
+
+Average contradiction_score per Label:
+nan: 0.0
+intrinsic: 0.4
+extrinsic: 0.4
+overall: 0.26666666666666666

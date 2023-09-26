@@ -14,7 +14,7 @@ class OpenAICompletion:
     - temperature (float): OpenAI temperature setting.
     - max_tokens (int): OpenAI maximum number of tokens setting. The token count of your prompt plus max_tokens cannot exceed the model's context.
     """
-    def __init__(self, model, open_ai_key, temperature=0, max_tokens=1500):
+    def __init__(self, model, open_ai_key, temperature=0, max_tokens=6000):
         """
         Initializes the OpenAICompletion with the provided settings.
         """
@@ -31,7 +31,7 @@ class OpenAICompletion:
         # Setting the API key for OpenAI based on provided key
         openai.api_key = self.open_ai_key
 
-    def get_completion_from_messages(self, messages):
+    def get_completion_from_messages(self, messages, temperature=0, max_tokens = 6000):
         """
         Fetches a completion response from OpenAI's ChatCompletion API based on the provided messages.
         """
@@ -41,16 +41,28 @@ class OpenAICompletion:
                 model=self.model,
                 messages=messages,
                 temperature=self.temperature,
-                max_tokens=self.max_tokens,
+                max_tokens=max_tokens,
             )
         except openai.error.RateLimitError:
-            # In case of a rate limit error, wait for 5 seconds and retry
-            time.sleep(5)
+            # In case of a rate limit error, wait for 15 seconds and retry
+            time.sleep(15)
+            print('RateLimitError')
             return self.get_completion_from_messages(messages)
         except openai.error.AuthenticationError:
             raise openai.error.AuthenticationError("Please pass a valid OpenAi key.")
-
-        # Returning the content of the first choice from the model's response
+        except openai.error.Timeout:
+            # In case of a rate limit error, wait for 15 seconds and retry
+            time.sleep(15)
+            print('Timeout')
+            return self.get_completion_from_messages(messages)
+        except openai.error.InvalidRequestError:
+            print('InvalidRequestError')
+            return None
+        except openai.error.APIConnectionError:
+            # In case of a api connection error, wait for 60 seconds and retry
+            time.sleep(60)
+            print('APIConnectionError')
+            return self.get_completion_from_messages(messages)
         return response.choices[0].message["content"]
 
     @staticmethod
@@ -71,10 +83,17 @@ class OpenAICompletion:
         """
         Extracts and loads a JSON string from a given text.
         """
-        return json.loads(text)
+        try:
+            data = json.loads(text)
+        except json.decoder.JSONDecodeError:
+            data = None
+        return data
     
     @staticmethod
     def extract_json_from_response(response):
+        # In case you cannot handle an error, return None
+        if response is None:
+            return None
         response_json_format = OpenAICompletion._extract_json(response)
         response_json = OpenAICompletion._load_json_from_text(response_json_format)
         return(response_json)
