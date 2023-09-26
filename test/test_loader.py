@@ -1,5 +1,5 @@
 import pytest
-from src.loaders.summarization_loader import SummarizationLoader
+from ariadne_ai.loaders.summarization_loader import SummarizationLoader
 
 def test_keyerror_on_missing_column():
     """ Missing "summary" key on purpose to trigger KeyError """
