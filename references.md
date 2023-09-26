@@ -23,12 +23,3 @@
     url = "https://aclanthology.org/2020.acl-main.173",
     doi = "10.18653/v1/2020.acl-main.173",
 }
-
-@InProceedings{maynez_acl20,
-  author =      "Joshua Maynez and Shashi Narayan and Bernd Bohnet and Ryan Thomas Mcdonald",
-  title =       "On Faithfulness and Factuality in Abstractive Summarization",
-  booktitle =   "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
-  year =        "2020",
-  pages = "1906--1919",
-  address = "Online",
-}

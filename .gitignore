@@ -128,8 +128,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-data/results_full
-data/datasets_full
 
 # Spyder project settings
 .spyderproject

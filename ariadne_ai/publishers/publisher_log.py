@@ -34,3 +34,7 @@ class PublisherLog(Publisher):
         """ Writes data to a CSV file. """
         df = pd.DataFrame(data)
         df.to_csv(self.filename, index=False)
+
+    def write_magik(self, data: dict):
+        """ Writes data to a magik dashboard. """
+        raise NotImplementedError("This method has not been implemented yet.")
