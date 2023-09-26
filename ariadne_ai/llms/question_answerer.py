@@ -42,6 +42,7 @@ class QuestionAnswerer:
             dict: Evaluation results formatted as a dictionary with questions as keys and 
                   'Yes', 'No', or 'Unknown' as values.
         """
+        
         user_message = self.USER_MESSAGE_TEMPLATE.format(questions, context)
         message = [
             {'role': 'system', 'content': self.SYSTEM_MESSAGE}, 
@@ -50,4 +51,5 @@ class QuestionAnswerer:
         
         openai_response = self.openAIcompletion.get_completion_from_messages(message)
         openai_response_json = self.openAIcompletion.extract_json_from_response(openai_response)
+        
         return openai_response_json
