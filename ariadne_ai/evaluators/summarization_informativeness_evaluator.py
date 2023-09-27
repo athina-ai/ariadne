@@ -1,19 +1,18 @@
 from .summarization_evaluator import SummarizationEvaluator
 from ..loaders.summarization_loader import SummarizationLoader
 from ..metrics.aggreement_score import AgreementScore 
-from ..metrics.contradiction_score import ContradictionScore
-from ..metrics.hallucination_score import HallucinationScore 
+from ..metrics.noninformativeness_score import Noninformativeness
 from ..publishers.publisher_log import PublisherLog
 from ..llms.question_generator import QuestionGenerator
 from ..llms.question_answerer import QuestionAnswerer
 
-class SummarizationHallucinationEvaluator(SummarizationEvaluator):
+class SummarizationInformativenessEvaluator(SummarizationEvaluator):
     """
-    Evaluator for hallucinations in text summarizations. 
+    Evaluator for informativeness in text summarizations. 
 
     Attributes:
         dataset: Dataset containing instances for evaluation.
-        question_generator: Question generator based on summaries.
+        question_generator: Question generator based on documents.
         question_answerer: Question answerer for the questions based on documents/summaries.
         publisher_log: JSON publisher to save the evaluation logs.
         performance_report_filename: txt file to save the perfrormance of a batch
@@ -24,12 +23,11 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
 
     metric_str_to_class = {
         'agreement_score': AgreementScore,
-        'hallucination_score': HallucinationScore,
-        'contradiction_score': ContradictionScore
+        'non_informativeness_score': Noninformativeness
     }
 
     def __init__(self, loader, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_sum_hal_eval.txt',  n_questions=5, 
-                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'hallucination_score', 'contradiction_score'], open_ai_key = None):
+                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'non_informativeness_score'], open_ai_key = None):
         """
         Initialize the evaluator with given parameters.
 
@@ -50,9 +48,7 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
         self.question_answerer = QuestionAnswerer(llm_model, open_ai_key)
         # Initialize logging
-        self.log_format = log_format
-        if(log_format is not None):
-            self.publisher_log = PublisherLog(log_filepath, log_format)
+        self.publisher_log = PublisherLog(log_filepath, log_format)
         self.logs = []
         self.n_instances = 0 
         # Intialize metrics
@@ -63,7 +59,7 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             setattr(self, f'{metric}_scores', {})
 
     def _evaluate_element(self, instance):
-        """Evaluate an instance for hallucination."""
+        """Evaluate an instance for non-informativeness."""
         document = instance['document']
         summary = instance['summary']
         if 'label' in instance:
@@ -71,8 +67,8 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         else:
             label = 'overall'
         
-        # Generate questions based on summary
-        questions = self.question_generator.generate(summary)
+        # Generate questions based on document
+        questions = self.question_generator.generate(document)
         
         # Get answers from document and summary
         answers_doc = self.question_answerer.answer(questions, document)
@@ -156,9 +152,7 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             log = self._evaluate_element(instance)
             self.logs.append(log)
         self.generate_performance_report(self.performance_filepath)
-        if(self.log_format is not None):
-            self.publisher_log.write(self.logs)
-        return self.logs
+        self.publisher_log.write(self.logs)
 
     
 

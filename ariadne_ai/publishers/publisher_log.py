@@ -1,6 +1,7 @@
 from .publisher import Publisher
 import json
 import pandas as pd
+import os
 
 class PublisherLog(Publisher):
     """
@@ -15,6 +16,9 @@ class PublisherLog(Publisher):
         """ Initializes the PublisherLog with an output filename and format."""
         self.filename = filename
         self.format = format
+        directory_path = os.path.dirname(self.filename)
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path) 
 
     def write(self, data: dict):
         """ Writes data in the specified format. """
@@ -34,7 +38,3 @@ class PublisherLog(Publisher):
         """ Writes data to a CSV file. """
         df = pd.DataFrame(data)
         df.to_csv(self.filename, index=False)
-
-    def write_magik(self, data: dict):
-        """ Writes data to a magik dashboard. """
-        raise NotImplementedError("This method has not been implemented yet.")
