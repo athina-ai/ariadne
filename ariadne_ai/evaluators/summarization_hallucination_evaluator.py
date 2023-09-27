@@ -50,7 +50,9 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
         self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
         self.question_answerer = QuestionAnswerer(llm_model, open_ai_key)
         # Initialize logging
-        self.publisher_log = PublisherLog(log_filepath, log_format)
+        self.log_format = log_format
+        if(log_format is not None):
+            self.publisher_log = PublisherLog(log_filepath, log_format)
         self.logs = []
         self.n_instances = 0 
         # Intialize metrics
@@ -154,7 +156,8 @@ class SummarizationHallucinationEvaluator(SummarizationEvaluator):
             log = self._evaluate_element(instance)
             self.logs.append(log)
         self.generate_performance_report(self.performance_filepath)
-        self.publisher_log.write(self.logs)
+        if(self.log_format is not None):
+            self.publisher_log.write(self.logs)
         return self.logs
 
     

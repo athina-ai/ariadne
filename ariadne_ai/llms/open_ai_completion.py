@@ -14,7 +14,7 @@ class OpenAICompletion:
     - temperature (float): OpenAI temperature setting.
     - max_tokens (int): OpenAI maximum number of tokens setting. The token count of your prompt plus max_tokens cannot exceed the model's context.
     """
-    def __init__(self, model, open_ai_key, temperature=0, max_tokens=6000):
+    def __init__(self, model, open_ai_key):
         """
         Initializes the OpenAICompletion with the provided settings.
         """
@@ -25,13 +25,11 @@ class OpenAICompletion:
             self.open_ai_key = os.getenv("OPENAI_API_KEY")
         else:
             self.open_ai_key = open_ai_key
-        self.temperature = temperature
-        self.max_tokens = max_tokens
         
         # Setting the API key for OpenAI based on provided key
         openai.api_key = self.open_ai_key
 
-    def get_completion_from_messages(self, messages, temperature=0, max_tokens = 6000):
+    def get_completion_from_messages(self, messages, temperature=0, max_tokens = 2000):
         """
         Fetches a completion response from OpenAI's ChatCompletion API based on the provided messages.
         """
@@ -40,7 +38,7 @@ class OpenAICompletion:
             response = openai.ChatCompletion.create(
                 model=self.model,
                 messages=messages,
-                temperature=self.temperature,
+                temperature=temperature,
                 max_tokens=max_tokens,
             )
         except openai.error.RateLimitError:

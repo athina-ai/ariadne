@@ -1,6 +1,7 @@
 from .publisher import Publisher
 import json
 import pandas as pd
+import os
 
 class PublisherLog(Publisher):
     """
@@ -15,6 +16,9 @@ class PublisherLog(Publisher):
         """ Initializes the PublisherLog with an output filename and format."""
         self.filename = filename
         self.format = format
+        directory_path = os.path.dirname(self.filename)
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path) 
 
     def write(self, data: dict):
         """ Writes data in the specified format. """
