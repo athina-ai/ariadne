@@ -132,6 +132,7 @@ venv.bak/
 # Project related
 data/results_full
 data/datasets_full
+data/build_datasets
 
 # Spyder project settings
 .spyderproject
