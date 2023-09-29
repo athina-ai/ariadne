@@ -6,6 +6,7 @@ class RagGenerationLoader(Loader):
     This class is a data loader for retrieval augmented generation (RAG) datasets.
 
     Attributes:
+        col_question (str): The column name corresponding to the user's question.
         col_context (str): The column name corresponding to the retrieved context.
         col_answer (str): The column name corresponding to the answer.
         col_label (str, optional): The column name corresponding to labels, if any.
@@ -14,11 +15,12 @@ class RagGenerationLoader(Loader):
         processed_dataset (list): The processed dataset with queries, context, response and other attributes if present.
     """
     
-    def __init__(self, col_context='context', col_answer = 'answer',
+    def __init__(self, col_question ='question',  col_context='context', col_answer = 'answer',
                  col_label=None, col_comment=None, format = 'json'):
         """ 
         Initializes the loader with specified or default column names.
         """
+        self.col_question = col_question
         self.col_context = col_context
         self.col_answer = col_answer
         self.col_label = col_label
@@ -46,17 +48,20 @@ class RagGenerationLoader(Loader):
         Transforms the raw data into a structured format. Processes each entry from the raw dataset, and extracts attributes.
         
         Raises:
-            KeyError: If mandatory columns (query, context or response) are missing in the raw dataset.
+            KeyError: If mandatory columns (question, context or response) are missing in the raw dataset.
             KeyError: If optional columns (label or comment) are missing in the raw dataset if defined.
         """
         for raw_instance in self._raw_dataset:
             # Check for mandatory columns in raw_instance
+            if self.col_question not in raw_instance:
+                raise KeyError(f"'{self.col_question}' not found in provided data.")
             if self.col_context not in raw_instance:
                 raise KeyError(f"'{self.col_context}' not found in provided data.")
             if self.col_answer not in raw_instance:
                 raise KeyError(f"'{self.col_answer}' not found in provided data.")
             # Create a processed instance with mandatory fields
             processed_instance = {
+                'question': raw_instance[self.col_question],
                 'context': raw_instance[self.col_context],
                 'answer': raw_instance[self.col_answer]
             }
@@ -92,11 +97,11 @@ class RagGenerationLoader(Loader):
         self._raw_dataset = data
         self.process()
 
-    def load_response(self, context, answer, comment = None, label = None) -> None:
+    def load_response(self, question, context, answer, comment = None, label = None) -> None:
         """
         Loads and processes a response of text summarization.
         """
-        raw_instance = {'context': context, 'answer': answer}
+        raw_instance = {'question':question, 'context': context, 'answer': answer}
         if comment is not None:
             raw_instance['comment'] =comment
         if label is not None:

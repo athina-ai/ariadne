@@ -1,6 +1,6 @@
 from .metric import Metric
 
-class Faithfullness(Metric):
+class FaithfullnessFailure(Metric):
     """
     The Faithfullness class is a metric that determines if the response can be inferred purely from the context provided.
     """
@@ -8,10 +8,10 @@ class Faithfullness(Metric):
     @staticmethod
     def verdict_to_int(verdict: str) -> int:
         """
-        Converts the verdict to an integer score. 'yes' verdict is converted to 1, 'no' verdict is converted to 0, and any other verdict is converted to None.
+        Converts the verdict to an integer score. 'yes' verdict is considered non-failure, while 'no' verdict is considered failure.
         """
         verdict = verdict.lower()
-        score = 1 if verdict == 'yes' else 0 if verdict == 'no' else None
+        score = 1 if verdict == 'no' else 0 if verdict == 'yes' else None
         return score
     
     @staticmethod
@@ -19,6 +19,6 @@ class Faithfullness(Metric):
         """
         Computes the faithfullness metric.
         """
-        is_faithfull = Faithfullness.verdict_to_int(faith_eval['verdict'])
+        is_faithfullness_failure = FaithfullnessFailure.verdict_to_int(faith_eval['verdict'])
         explanation = faith_eval['explanation']
-        return is_faithfull, explanation
+        return is_faithfullness_failure, explanation

@@ -5,7 +5,7 @@ faithfull: 2
 unfaithfull: 2
 total: 4
 
-Average faithfullness per Label:
-faithfull: 1.0
-unfaithfull: 0.0
+Average faithfullness_failure per Label:
+faithfull: 0.0
+unfaithfull: 1.0
 overall: 0.5
