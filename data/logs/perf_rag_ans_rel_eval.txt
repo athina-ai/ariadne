@@ -1,0 +1,11 @@
+Model: gpt-3.5-turbo
+
+Number of instances per Label:
+relevant: 2
+irrelevant: 2
+total: 4
+
+Average answer_relevance_failure per Label:
+relevant: 0.0
+irrelevant: 0.5
+overall: 0.25
