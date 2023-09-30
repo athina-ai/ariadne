@@ -6,7 +6,7 @@
         ],
         "label": "relevant",
         "context_relevance_failure": 0,
-        "reason": "The context contains all the necessary information to answer the user's query. It provides details about the objective of the Uzbekistan-Afghanistan-Pakistan Railway Project, which is to create a direct railway link between Uzbekistan and Pakistan, passing through Afghanistan's territory. It also mentions how the project aims to enhance trade and logistics efficiency by establishing a rail connection between Tashkent, Kabul, and Peshawar. Additionally, it provides information about the estimated cost of the project, the trilateral agreement signed by Pakistan, Afghanistan, and Uzbekistan, and the route the railway will traverse. Overall, the context provides sufficient information to answer the user's query."
+        "reason": "The context contains detailed information about the objective of the Uzbekistan-Afghanistan-Pakistan Railway Project and how it is expected to enhance trade and logistics efficiency. It mentions that the project aims to create a direct railway link between Uzbekistan and Pakistan, passing through Afghanistan's territory. It also states that the project is expected to strengthen trade relations between Pakistan and South Asia, reduce cargo delivery times, and foster regional trade and economic growth. Therefore, the chatbot should be able to answer the user's query using the provided context."
     },
     {
         "question": "Question: What is the objective of the Uzbekistan-Afghanistan-Pakistan Railway Project and how is it expected to enhance trade and logistics efficiency?",
@@ -16,7 +16,7 @@
         ],
         "label": "relevant",
         "context_relevance_failure": 0,
-        "reason": "The context contains detailed information about the Uzbekistan-Afghanistan-Pakistan Railway Project, including its objective and how it is expected to enhance trade and logistics efficiency. It provides information about the rail connection, the route, the estimated cost, the trilateral agreement, the impact on trade and connectivity, the geopolitical implications, the alternative route for Afghanistan, and the impact on local economies. Therefore, the chatbot should be able to answer the user's query using the provided context."
+        "reason": "The context contains sufficient information to answer the user's query. It provides details about the objective of the Uzbekistan-Afghanistan-Pakistan Railway Project, which is to create a direct railway link between Uzbekistan and Pakistan, passing through Afghanistan's territory. It also explains how the project aims to enhance trade and logistics efficiency by establishing a rail connection between Tashkent, Kabul, and Peshawar. Additionally, the context mentions the estimated cost of the project, the trilateral agreement signed by the countries involved, and the expected impact on trade, regional cooperation, and economic growth."
     },
     {
         "question": "Question: What is the objective of the Uzbekistan-Afghanistan-Pakistan Railway Project and how is it expected to enhance trade and logistics efficiency?",
@@ -35,6 +35,6 @@
         ],
         "label": "irrelevant",
         "context_relevance_failure": 1,
-        "reason": "The context provided does not contain any information about the Uzbekistan-Afghanistan-Pakistan Railway Project or its objective. The context is focused on the Indian Space Research Organisation (ISRO) and its achievements in space technology and research. Therefore, the chatbot cannot answer the user's query with the given context."
+        "reason": "The context provided does not contain any information about the Uzbekistan-Afghanistan-Pakistan Railway Project or its objective. The context is focused on the Indian Space Research Organisation (ISRO) and its achievements in space technology and research. Therefore, the chatbot does not have sufficient information to answer the user's query."
     }
 ]

@@ -1,16 +1,16 @@
 from .rag_evaluator import RagEvaluator
-from ..loaders.rag_generation_loader import RagGenerationLoader
-from ..metrics.context_relevance_failure import ContextRelevanceFailure 
-from ..publishers.publisher_log import PublisherLog
-from ..llms.context_relevance_evaluator import ContextRelevanceEvaluator
+from ...loaders.rag_loader import RagLoader
+from ...metrics.rag.faithfullness_failure import FaithfullnessFailure 
+from ...publishers.publisher_log import PublisherLog
+from ...llms.rag.faithfullness import Faithfullness
 
-class RagContextRelevanceEvaluator(RagEvaluator):
+class FaithfulnessEvaluator(RagEvaluator):
     """
-    Evaluator for context relevance in rag chatbot. 
+    Evaluator for faithfullness in rag chatbot. 
 
     Attributes:
         dataset: Dataset containing instances for evaluation.
-        context_relevance_evaluator: Evaluator for context relevance.
+        faithfullness_evaluator: Evaluator for faithfullness
         publisher_log: JSON publisher to save the evaluation logs.
         performance_report_filename: txt file to save the perfrormance of a batch
         metrics: List of metrics to evaluate.
@@ -18,11 +18,11 @@ class RagContextRelevanceEvaluator(RagEvaluator):
     """
     # Chamge metric
     metric_str_to_class = {
-        'context_relevance_failure': ContextRelevanceFailure
+        'faithfullness_failure': FaithfullnessFailure
     }
 
-    def __init__(self, loader, log_filepath='data/logs/log_rag_cont_rel_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_rag_cont_rel_eval.txt', 
-                 llm_model='gpt-3.5-turbo', metrics=['context_relevance_failure'], open_ai_key = None):
+    def __init__(self, loader, log_filepath='data/logs/log_rag_faith_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_rag_faith_eval.txt', 
+                 llm_model='gpt-3.5-turbo', metrics=['faithfullness_failure'], open_ai_key = None):
         """
         Initialize the evaluator with given parameters.
 
@@ -32,13 +32,13 @@ class RagContextRelevanceEvaluator(RagEvaluator):
         - llm_model: Language model to be used.
         - metrics: List of metrics for evaluation.
         """
-        if not isinstance(loader, RagGenerationLoader):
-            raise TypeError("Loader must be an instance of RagGenerationLoader")
+        if not isinstance(loader, RagLoader):
+            raise TypeError("Loader must be an instance of RagLoader")
         # Load data
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.llm_model = llm_model
-        self.context_relevance_evaluator = ContextRelevanceEvaluator(llm_model, open_ai_key)
+        self.faithfullness_evaluator = Faithfullness(llm_model, open_ai_key)
         # Initialize logging
         self.log_format = log_format
         if(log_format is not None):
@@ -54,35 +54,35 @@ class RagContextRelevanceEvaluator(RagEvaluator):
 
     def _evaluate_element(self, instance):
         """Evaluate an instance for hallucination."""
-        print(instance)
-        question = instance['question']
         context = instance['context']
+        answer = instance['answer']
         if 'label' in instance:
             label = instance['label']
         else:
             label = 'overall'
         # Run LLM Evaluator for faithfullness
-        cont_rel_eval = self.context_relevance_evaluator.evaluate(question, context)
+        faith_eval = self.faithfullness_evaluator.evaluate(context, answer)
       
         metric_results = {}
         # Compute metrics
-        if( cont_rel_eval is None):
+        if( faith_eval is None):
             metric_results['evaluation'] = 'undefined'
         else:
             for metric in self.metrics:
                 metric_class = self.metric_str_to_class.get(metric)
-                metric_result, explanation = metric_class.compute(cont_rel_eval)
+                metric_result, explanation = metric_class.compute(faith_eval)
                 metric_results[metric] = metric_result
                 metric_results['reason'] = explanation
                 self.update_metric_aggr(metric, label, metric_result)
             self.n_instances = self.n_instances +1
             self.label_counts[label] = self.label_counts.get(label, 0) + 1
-        return {
-            'question': question,
+        log_instnace =  {
             'context': context,
+            'answer': answer,
             'label': label,
             **metric_results
         }
+        return log_instnace
 
     def update_metric_aggr(self, metric, label, aggr_score):
         """ Update the aggregated score for a specific metric and label."""

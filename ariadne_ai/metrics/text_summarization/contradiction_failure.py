@@ -1,6 +1,6 @@
-from .metric import Metric
+from ..metric import Metric
 
-class ContradictionScore(Metric):
+class ContradictionFailure(Metric):
     """
     Metric to evaluate the degree of contradiction between the answers obtained from 
     a summary and the original document. It captures the percentage of questions that 
@@ -15,7 +15,7 @@ class ContradictionScore(Metric):
     """
     
     @staticmethod
-    def _compute_metric(answers_src, answers_sum):
+    def _compute_metric(answers_src, answers_sum, questions):
         """
         Compute the number of contradictions between answers derived from the document 
         and the summary.
@@ -29,14 +29,21 @@ class ContradictionScore(Metric):
         """
         answers_src_ls = list(answers_src.values())
         answers_sum_ls = list(answers_sum.values())
+
         n_contradiction = 0
-        for ans_src, ans_sum in zip(answers_src_ls, answers_sum_ls):
+        cont_questions = []
+
+        for idx, (ans_src, ans_sum) in enumerate(zip(answers_src_ls, answers_sum_ls)):
             if ans_src.strip().lower() in ['yes', 'no'] and  ans_src.strip().lower() != ans_sum.strip().lower():
                 n_contradiction += 1
-        return n_contradiction
+                cont_question = questions[f"question {idx+1}"]
+                cont_questions.append(f'{cont_question}')
+
+        return n_contradiction,cont_questions
+
 
     @staticmethod
-    def compute(answers_src, answers_sum, n_questions):
+    def compute(answers_src, answers_sum, questions, n_questions):
         """
         Compute the contradiction score by normalizing the number of contradictions by 
         the total number of questions.
@@ -49,6 +56,10 @@ class ContradictionScore(Metric):
         Returns:
             float: Contradiction score.
         """
-        n_contradiction = ContradictionScore._compute_metric(answers_src, answers_sum)
-        con_score = n_contradiction / n_questions
-        return con_score
+        n_contradiction, cont_questions = ContradictionFailure._compute_metric(answers_src, answers_sum, questions)
+        is_contradiction_failure = 1 if n_contradiction > 0 else 0 
+        explanation = cont_questions
+        cont_score = n_contradiction / n_questions
+        return is_contradiction_failure, explanation,cont_score
+
+

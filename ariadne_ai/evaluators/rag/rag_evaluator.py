@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from ..loaders.rag_generation_loader import RagGenerationLoader
+from ...loaders.rag_loader import RagLoader
 
 class RagEvaluator(ABC):
     
     @abstractmethod
-    def __init__(self, loader:RagGenerationLoader, **kwargs):
+    def __init__(self, loader:RagLoader, **kwargs):
         pass
 
     @abstractmethod

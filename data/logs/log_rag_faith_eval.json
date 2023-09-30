@@ -6,7 +6,7 @@
         "answer": "The PSLV-C56 mission is scheduled to be launched on Sunday, 30 July 2023 at 06:30 IST / 01:00 UTC. It will be launched from the Satish Dhawan Space Centre, Sriharikota, Andhra Pradesh, India.",
         "label": "faithfull",
         "faithfullness_failure": 0,
-        "reason": "The response can be inferred purely from the context provided. The context explicitly states that the PSLV-C56 mission is scheduled to be launched on Sunday, 30 July 2023 at 06:30 IST / 01:00 UTC from the Satish Dhawan Space Centre, Sriharikota, Andhra Pradesh, India."
+        "reason": "The response can be inferred purely from the context provided. The launch date, time, and location are explicitly mentioned in the context."
     },
     {
         "context": [

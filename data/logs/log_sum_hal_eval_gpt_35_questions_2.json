@@ -15,9 +15,16 @@
             "question 2": "Yes"
         },
         "label": NaN,
+        "hallucination_failure": 1,
+        "reason_hallucination_failure": [
+            "Was a gas leak found at the fracking site in Lancashire?"
+        ],
+        "contradiction_failure": 0,
+        "reason_contradiction_failure": [],
         "agreement_score": 0.5,
-        "hallucination_score": 0.5,
-        "contradiction_score": 0.0
+        "reason_agreement_score": [
+            "Was a fracking operation in Lancashire suspended?"
+        ]
     },
     {
         "document": "Tries from Macgraff Leuluai, Ah Van and Chris Bridge gave Widnes a 14-6 half-time lead, with Cas loanee Paddy Flynn responding against his parent club.\nFlynn scored another early in the second, but Ah Van, Lloyd White (2) and Joe Mellor tries made it 38-12.\nDespite three Cas tries in four minutes - Larne Patrick, Luke Gale and Flynn's hat-trick score - Widnes held on.\nThe Vikings' victory had looked assured when Mellor took advantage of Castleford indecision on a short kick-off, running straight through to help them to a 26-point lead.\nBut, having lost nine of their previous 10 matches, their defence creaked as they let Patrick, who has just signed a three-year deal to move from Huddersfield after his loan spell, in for a try.\nGale and Flynn - on loan at Castleford from the Vikings until the end of the season - made it a nervy finish, but the Tigers suffered their fourth consecutive home league defeat.\nWidnes moved above Wakefield into seventh, while Castleford remain in sixth, one point above the Vikings.\nCastleford: Solomona, Monaghan, Crooks, Webster, Flynn, McShane, Gale, Jewitt, Milner, Patrick, Moors, McMeeken, Massey.\nReplacements: Millington, Springer, Tickle, Cook.\nWidnes: Hanbury, Thompson, Runciman, Bridge, Ah Van, Mellor,Brown, Cahill, White, Buchanan, Whitley, Dean, Leuluai.\nReplacements: J. Chapelhow, Manuokafoa, Walker, Heremaia.\nReferee: J Smith",
@@ -35,9 +42,16 @@
             "question 2": "Yes"
         },
         "label": "intrinsic",
+        "hallucination_failure": 0,
+        "reason_hallucination_failure": [],
+        "contradiction_failure": 1,
+        "reason_contradiction_failure": [
+            "Did Widnes suffer their first defeat of the season?"
+        ],
         "agreement_score": 0.5,
-        "hallucination_score": 0.0,
-        "contradiction_score": 0.5
+        "reason_agreement_score": [
+            "Did Widnes win at home?"
+        ]
     },
     {
         "document": "More than 20 competitors are due to take part in Saturday's event in Carrbridge in the Cairngorms.\nCarvers from Scotland, England, Ireland as well as continental Europe, Canada and the US regularly enter the competition.\nThey can use only chainsaws - any other carving tool is banned - to carve logs into the shapes of animals and people.\nLast year's winner Pete Bowsher, from Moffat, is to return to defend the title, and retain the first place winner's prize the Claymore Trophy.",
@@ -55,8 +69,14 @@
             "question 2": "Yes"
         },
         "label": "extrinsic",
+        "hallucination_failure": 0,
+        "reason_hallucination_failure": [],
+        "contradiction_failure": 1,
+        "reason_contradiction_failure": [
+            "Will the northern Ireland car championships take place at this year's ballymena festival?",
+            "Is this year's ballymena festival hosting the northern Ireland car championships?"
+        ],
         "agreement_score": 0.0,
-        "hallucination_score": 0.0,
-        "contradiction_score": 1.0
+        "reason_agreement_score": []
     }
 ]

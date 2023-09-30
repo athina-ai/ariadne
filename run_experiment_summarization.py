@@ -1,6 +1,6 @@
 from ariadne_ai.loaders.summarization_loader import SummarizationLoader
-from ariadne_ai.evaluators.summarization_hallucination_evaluator import SummarizationHallucinationEvaluator
-from ariadne_ai.evaluators.summarization_informativeness_evaluator import SummarizationInformativenessEvaluator
+from ariadne_ai.evaluators.text_summarization.hallucination_evaluator import HallucinationEvaluator
+from ariadne_ai.evaluators.text_summarization.informativeness_evaluator import InformativenessEvaluator
 # Constants and Configurations
 
 # Path to the input file containing raw data.
@@ -23,12 +23,6 @@ RUN_CONFIGS = [
         'perf_filepath': 'data/logs/perf_sum_hal_eval_gpt_35_questions_2.txt',
         'llm_model': 'gpt-3.5-turbo-16k',
         'n_questions': 2
-    },
-    {
-        'log_filepath': 'data/logs/log_sum_hal_eval_gpt_4_questions_5.json',
-        'perf_filepath': 'data/logs/perf_sum_hal_eval_gpt_4_questions_5.txt',
-        'llm_model': 'gpt-4',
-        'n_questions': 5
     }
 ]
 
@@ -49,7 +43,7 @@ def run_evaluation_hallucination(loader: SummarizationLoader, config: dict) -> N
     """
     Given a loader and configuration, initialize an evaluator and run the hallucination evaluation.
     """
-    evaluator = SummarizationHallucinationEvaluator(
+    evaluator = HallucinationEvaluator(
         loader,
         log_filepath=config['log_filepath'],
         llm_model=config['llm_model'],
@@ -63,7 +57,7 @@ def run_evaluation_informativeness(loader: SummarizationLoader, config: dict) ->
     """
     Given a loader and configuration, initialize an evaluator and run the non-informativeness evaluation.
     """
-    evaluator = SummarizationInformativenessEvaluator(
+    evaluator = InformativenessEvaluator(
         loader,
         log_filepath=config['log_filepath'],
         llm_model=config['llm_model'],
@@ -79,9 +73,10 @@ def main():
     """
     loader = initialize_loader()
     for config in RUN_CONFIGS:
-        #run_evaluation_informativeness(loader, config)
+        run_evaluation_informativeness(loader, config)
         run_evaluation_hallucination(loader, config)
 
 # Ensure that the main execution only occurs if this script is run directly (not imported).
 if __name__ == "__main__":
     main()
+
