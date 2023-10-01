@@ -1,6 +1,6 @@
-from .metric import Metric
+from ..metric import Metric
 
-class HallucinationScore(Metric):
+class HallucinationfFailure(Metric):
     """
     Calculates the hallucination score between two sets of answers.
 
@@ -11,7 +11,7 @@ class HallucinationScore(Metric):
     """
 
     @staticmethod
-    def _compute_metric(answers_src, answers_sum):
+    def _compute_metric(answers_src, answers_sum, questions):
         """
         Computes the number of hallucinations between the answers from source and summary.
 
@@ -24,25 +24,34 @@ class HallucinationScore(Metric):
         """
         answers_src_ls = list(answers_src.values())
         answers_sum_ls = list(answers_sum.values())
+
+        halu_questions =[]
         n_hallucination = 0
-        for ans_src, ans_sum in zip(answers_src_ls, answers_sum_ls):
+
+        for idx, (ans_src, ans_sum) in enumerate(zip(answers_src_ls, answers_sum_ls)):
             if ans_src.strip().lower() == 'unknown' and ans_sum.strip().lower() in ['yes', 'no']:
                 n_hallucination += 1
-        return n_hallucination
+                halu_question = questions[f"question {idx+1}"]
+                halu_questions.append(f'{halu_question}')
+
+        return n_hallucination,halu_questions
 
     @staticmethod
-    def compute(answers_src, answers_sum, n_questions):
+    def compute(answers_src, answers_sum, questions, n_questions):
         """
         Computes the hallucination score.
 
         Args:
             answers_src (dict): Answers derived from the source.
             answers_sum (dict): Answers derived from the summary.
+            questions (dict): Questions generated from the summary.
             n_questions (int): Total number of questions.
 
         Returns:
             float: Hallucination score.
         """
-        n_hallucination = HallucinationScore._compute_metric(answers_src, answers_sum)
-        hal_score = n_hallucination / n_questions
-        return hal_score
+        n_hallucination, halu_questions = HallucinationfFailure._compute_metric(answers_src, answers_sum, questions)
+        is_hallucination_failure = 1 if n_hallucination > 0 else 0 
+        halu_score = n_hallucination / n_questions
+        explanation = halu_questions
+        return is_hallucination_failure, explanation, halu_score

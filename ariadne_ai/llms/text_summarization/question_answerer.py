@@ -1,4 +1,4 @@
-from .open_ai_completion import OpenAICompletion
+from ..open_ai_completion import OpenAICompletion
 
 class QuestionAnswerer:
     """

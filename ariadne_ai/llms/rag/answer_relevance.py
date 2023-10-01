@@ -1,4 +1,4 @@
-from .open_ai_completion import OpenAICompletion
+from ..open_ai_completion import OpenAICompletion
 
 class FewShotExampleAnswertRelevance():
     """
@@ -34,7 +34,7 @@ class FewShotExampleAnswertRelevance():
                 f"{self.eval_function}: {self.eval_result}\n"
                 f"Reason:{self.eval_reason}")
 
-class AnswerRelevanceEvaluator:
+class AnswerRelevance:
     """
     This class determines whether the chatbot's response answers specifically what the user is asking about, and covers all aspects of the user's query
 

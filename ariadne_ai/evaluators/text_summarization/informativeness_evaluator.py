@@ -1,12 +1,12 @@
 from .summarization_evaluator import SummarizationEvaluator
-from ..loaders.summarization_loader import SummarizationLoader
-from ..metrics.aggreement_score import AgreementScore 
-from ..metrics.noninformativeness_score import Noninformativeness
-from ..publishers.publisher_log import PublisherLog
-from ..llms.question_generator import QuestionGenerator
-from ..llms.question_answerer import QuestionAnswerer
+from ...loaders.summarization_loader import SummarizationLoader
+from ...metrics.text_summarization.aggreement_score import AgreementScore 
+from ...metrics.text_summarization.informativeness_failure import InformativenessFailure
+from ...publishers.publisher_log import PublisherLog
+from ...llms.text_summarization.question_generator import QuestionGenerator
+from ...llms.text_summarization.question_answerer import QuestionAnswerer
 
-class SummarizationInformativenessEvaluator(SummarizationEvaluator):
+class InformativenessEvaluator(SummarizationEvaluator):
     """
     Evaluator for informativeness in text summarizations. 
 
@@ -23,11 +23,11 @@ class SummarizationInformativenessEvaluator(SummarizationEvaluator):
 
     metric_str_to_class = {
         'agreement_score': AgreementScore,
-        'non_informativeness_score': Noninformativeness
+        'informativeness_failure': InformativenessFailure
     }
 
-    def __init__(self, loader, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_sum_hal_eval.txt',  n_questions=5, 
-                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'non_informativeness_score'], open_ai_key = None):
+    def __init__(self, loader, questions = None, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_sum_hal_eval.txt',  n_questions=5, 
+                 llm_model='gpt-3.5-turbo', metrics=['agreement_score', 'informativeness_failure'], open_ai_key = None):
         """
         Initialize the evaluator with given parameters.
 
@@ -45,7 +45,12 @@ class SummarizationInformativenessEvaluator(SummarizationEvaluator):
         # Intialize LLMs
         self.llm_model = llm_model
         self.n_questions = n_questions
-        self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
+        self.questions_defined = None
+        if questions is None:
+            self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
+        else:
+            self.question_generator = None
+            self.questions_defined  = questions
         self.question_answerer = QuestionAnswerer(llm_model, open_ai_key)
         # Initialize logging
         self.publisher_log = PublisherLog(log_filepath, log_format)
@@ -67,23 +72,27 @@ class SummarizationInformativenessEvaluator(SummarizationEvaluator):
         else:
             label = 'overall'
         
-        # Generate questions based on document
-        questions = self.question_generator.generate(document)
+        # Generate questions based on summary
+        if (self.questions_defined is None):
+            questions = self.question_generator.generate(summary)
+        # Or load the pre-defined questions:
+        else:
+            questions = self.questions_defined
         
         # Get answers from document and summary
         answers_doc = self.question_answerer.answer(questions, document)
         answers_sum = self.question_answerer.answer(questions, summary)
         metric_results = {}
-        print(answers_doc, answers_sum, questions)
         # Compute metrics
         if( answers_doc is None or answers_sum is None or questions is None):
             metric_results['evaluation'] = 'undefined'
         else:
-            for score in self.metrics:
-                metric_class = self.metric_str_to_class.get(score)
-                metric_result = metric_class.compute(answers_doc, answers_sum, self.n_questions)
-                metric_results[score] = metric_result
-                self.update_metric_aggr(score, label, metric_result)
+            for metric in self.metrics:
+                metric_class = self.metric_str_to_class.get(metric)
+                metric_result, explanation, score = metric_class.compute(answers_doc, answers_sum, questions, self.n_questions)
+                metric_results[metric] = metric_result
+                metric_results[f'reason_{metric}'] = explanation
+                self.update_metric_aggr(metric, label, metric_result)
             self.n_instances = self.n_instances +1
             self.label_counts[label] = self.label_counts.get(label, 0) + 1
         return {

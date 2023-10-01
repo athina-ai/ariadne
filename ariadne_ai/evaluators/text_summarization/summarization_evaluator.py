@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..loaders.summarization_loader import SummarizationLoader
+from ...loaders.summarization_loader import SummarizationLoader
 
 class SummarizationEvaluator(ABC):
     

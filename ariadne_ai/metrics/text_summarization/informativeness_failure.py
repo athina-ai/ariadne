@@ -1,15 +1,15 @@
-from .metric import Metric
+from ..metric import Metric
 
-class Noninformativeness(Metric):
+class InformativenessFailure(Metric):
     """
     Calculates noninformativeness score between two sets of answers.
 
-    Noninformativeness computes the proportion of questions that received 
+    Informativeness computes the proportion of questions that received 
     received a 'Unknown' summary-based answer and an 'Yes/No' document-based answer.
     """
 
     @staticmethod
-    def _compute_metric(answers_src, answers_sum):
+    def _compute_metric(answers_src, answers_sum, questions):
         """
         Computes the number of questions with 'Unknown' summary-based answer and an 'Yes/No' document-based answer.
 
@@ -20,16 +20,23 @@ class Noninformativeness(Metric):
         Returns:
             int: Number of questions with questions with 'Unknown' summary-based answer and an 'Yes/No' document-based answer.
         """
+        # get answers
         answers_src_ls = list(answers_src.values())
         answers_sum_ls = list(answers_sum.values())
+        # init 
+        non_info_questions =[]
         n_non_informativeness = 0 
-        for ans_src, ans_sum in zip(answers_src_ls, answers_sum_ls):
+
+        for idx, (ans_src, ans_sum) in enumerate(zip(answers_src_ls, answers_sum_ls)):
             if ans_sum.strip().lower() == 'unknown' and ans_src.strip().lower() in ['yes', 'no']:
                 n_non_informativeness += 1
-        return n_non_informativeness
+                non_info_question = questions[f"question {idx+1}"]
+                non_info_questions.append(f'{non_info_question}')
+
+        return n_non_informativeness, non_info_questions
 
     @staticmethod
-    def compute(answers_src, answers_sum, n_questions):
+    def compute(answers_src, answers_sum, questions, n_questions):
         """
         Computes the non-informativeness score.
 
@@ -41,6 +48,11 @@ class Noninformativeness(Metric):
         Returns:
             float: Non-informativeness score.
         """
-        n_non_informativeness = Noninformativeness._compute_metric(answers_src, answers_sum)
-        noninfo_score = n_non_informativeness / n_questions
-        return noninfo_score
+        n_non_informativeness, non_info_questions = InformativenessFailure._compute_metric(answers_src, answers_sum, questions)
+        is_informativeness_failure = 1 if n_non_informativeness > 0 else 0 
+        non_info_score = n_non_informativeness / n_questions
+        explanation = non_info_questions
+        return is_informativeness_failure, explanation, non_info_score
+    
+
+

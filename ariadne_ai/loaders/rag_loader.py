@@ -1,7 +1,7 @@
 from .loader import Loader
 import json
 
-class RagGenerationLoader(Loader):
+class RagLoader(Loader):
     """
     This class is a data loader for retrieval augmented generation (RAG) datasets.
 

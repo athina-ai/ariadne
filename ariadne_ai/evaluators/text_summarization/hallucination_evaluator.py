@@ -1,44 +1,59 @@
-from .rag_evaluator import RagEvaluator
-from ..loaders.rag_generation_loader import RagGenerationLoader
-from ..metrics.answer_relevance_failure import AnswerRelevanceFailure 
-from ..publishers.publisher_log import PublisherLog
-from ..llms.answer_relevance_evaluator import AnswerRelevanceEvaluator
+from .summarization_evaluator import SummarizationEvaluator
+from ...loaders.summarization_loader import SummarizationLoader
+from ...metrics.text_summarization.aggreement_score import AgreementScore 
+from ...metrics.text_summarization.contradiction_failure import ContradictionFailure
+from ...metrics.text_summarization.hallucination_failure import HallucinationfFailure
+from ...publishers.publisher_log import PublisherLog
+from ...llms.text_summarization.question_generator import QuestionGenerator
+from ...llms.text_summarization.question_answerer import QuestionAnswerer
 
-class RagAnswerRelevanceEvaluator(RagEvaluator):
+class HallucinationEvaluator(SummarizationEvaluator):
     """
-    Evaluator for answer relevance in rag chatbot. 
+    Evaluator for hallucinations in text summarizations. 
 
     Attributes:
         dataset: Dataset containing instances for evaluation.
-        context_relevance_evaluator: Evaluator for context relevance.
+        question_generator: Question generator based on summaries.
+        question_answerer: Question answerer for the questions based on documents/summaries.
         publisher_log: JSON publisher to save the evaluation logs.
         performance_report_filename: txt file to save the perfrormance of a batch
         metrics: List of metrics to evaluate.
         logs: List to accumulate evaluation results for each instance.
+        n_questions: Number of questions to be generated for each summary.
     """
-    # Chamge metric
+
     metric_str_to_class = {
-        'answer_relevance_failure': AnswerRelevanceFailure
+        'agreement_score': AgreementScore,
+        'hallucination_failure': HallucinationfFailure,
+        'contradiction_failure': ContradictionFailure
     }
 
-    def __init__(self, loader, log_filepath='data/logs/log_rag_ans_rel_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_rag_ans_rel_eval.txt', 
-                 llm_model='gpt-3.5-turbo', metrics=['answer_relevance_failure'], open_ai_key = None):
+    def __init__(self, loader, questions = None, log_filepath='data/logs/log_sum_hal_eval.json', log_format = 'json', performance_filepath = 'data/logs/perf_sum_hal_eval.txt',  n_questions=5, 
+                 llm_model='gpt-3.5-turbo', metrics=[ 'hallucination_failure', 'contradiction_failure', 'agreement_score'], open_ai_key = None):
         """
         Initialize the evaluator with given parameters.
 
         Args:
         - loader: An instance of SummarizationLoader.
         - log_filepath: Path to save the logs.
+        - n_questions: Number of questions to generate for summaries.
         - llm_model: Language model to be used.
         - metrics: List of metrics for evaluation.
         """
-        if not isinstance(loader, RagGenerationLoader):
-            raise TypeError("Loader must be an instance of RagGenerationLoader")
+        if not isinstance(loader, SummarizationLoader):
+            raise TypeError("Loader must be an instance of SummarizationLoader")
         # Load data
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.llm_model = llm_model
-        self.answer_relevance_evaluator = AnswerRelevanceEvaluator(llm_model, open_ai_key)
+        self.n_questions = n_questions
+        self.questions_defined = None
+        if questions is None:
+            self.question_generator = QuestionGenerator(llm_model, n_questions,  open_ai_key)
+        else:
+            self.question_generator = None
+            self.questions_defined  = questions
+        self.question_answerer = QuestionAnswerer(llm_model, open_ai_key)
         # Initialize logging
         self.log_format = log_format
         if(log_format is not None):
@@ -54,32 +69,42 @@ class RagAnswerRelevanceEvaluator(RagEvaluator):
 
     def _evaluate_element(self, instance):
         """Evaluate an instance for hallucination."""
-        print(instance)
-        question = instance['question']
-        answer = instance['answer']
+        document = instance['document']
+        summary = instance['summary']
         if 'label' in instance:
             label = instance['label']
         else:
             label = 'overall'
-        # Run LLM Evaluator for faithfullness
-        anw_rel_eval = self.answer_relevance_evaluator.evaluate(question, answer)
-      
+        
+        # Generate questions based on summary
+        if (self.questions_defined is None):
+            questions = self.question_generator.generate(summary)
+        # Or load the pre-defined questions:
+        else:
+            questions = self.questions_defined
+        
+        # Get answers from document and summary
+        answers_doc = self.question_answerer.answer(questions, document)
+        answers_sum = self.question_answerer.answer(questions, summary)
         metric_results = {}
         # Compute metrics
-        if( anw_rel_eval is None):
+        if( answers_doc is None or answers_sum is None or questions is None):
             metric_results['evaluation'] = 'undefined'
         else:
             for metric in self.metrics:
                 metric_class = self.metric_str_to_class.get(metric)
-                metric_result, explanation = metric_class.compute(anw_rel_eval)
+                metric_result, explanation, score = metric_class.compute(answers_doc, answers_sum, questions, self.n_questions)
                 metric_results[metric] = metric_result
-                metric_results['reason'] = explanation
+                metric_results[f'reason_{metric}'] = explanation
                 self.update_metric_aggr(metric, label, metric_result)
             self.n_instances = self.n_instances +1
             self.label_counts[label] = self.label_counts.get(label, 0) + 1
         return {
-            'question': question,
-            'answer': answer,
+            'document': document,
+            'summary': summary,
+            'questions': questions,
+            'answers_doc': answers_doc,
+            'answers_sum': answers_sum,
             'label': label,
             **metric_results
         }
@@ -121,6 +146,7 @@ class RagAnswerRelevanceEvaluator(RagEvaluator):
         """Generate a performance report and save it to the provided filename."""
         avg_scores = self.compute_average_scores()
         with open(filename, 'w') as f:
+            f.write(f"Number of Questions: {self.n_questions}\n")
             f.write(f"Model: {self.llm_model}\n")
             f.write("\nNumber of instances per Label:\n")
             for label, cnt in self.label_counts.items():
@@ -131,6 +157,8 @@ class RagAnswerRelevanceEvaluator(RagEvaluator):
                 for label, avg in avg_scores[metric].items():
                     f.write(f"{label}: {avg}\n")
 
+
+
     def run(self):
         """Evaluate all instances in the dataset."""
         for instance in self.dataset:
@@ -140,3 +168,9 @@ class RagAnswerRelevanceEvaluator(RagEvaluator):
         if(self.log_format is not None):
             self.publisher_log.write(self.logs)
         return self.logs
+
+    
+
+
+
+    
