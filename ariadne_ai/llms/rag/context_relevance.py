@@ -1,5 +1,6 @@
 from ..open_ai_completion import OpenAICompletion
 
+
 class FewShotExampleContextRelevance:
     """
     Class represting an example of the evaluation that could be used for few-shot prompting.
@@ -33,13 +34,14 @@ class FewShotExampleContextRelevance:
         self.eval_result = eval_result
         self.eval_reason = eval_reason
 
+
 class ContextRelevance:
     """
     This class determines whether the chatbot's response can be inferred using only the information provided as context.
 
     Attributes:
         openAIcompletion (OpenAICompletion): Instance for interactions with OpenAI's API.
-        examples (list[FewShotExampleFaithfullness]): List of few-shot examples used for evaluation.
+        examples (list[FewShotExampleFaithfulness]): List of few-shot examples used for evaluation.
     """
 
     SYSTEM_MESSAGE = """ 
@@ -66,14 +68,11 @@ class ContextRelevance:
         self.openAIcompletion = OpenAICompletion(model, open_ai_key)
         self.examples = self.get_few_shot_examples()
 
-
     def evaluate(self, query: str, context: str):
         """
         Evaluation for is response faithful to context
         """
-        user_message = self.USER_MESSAGE_TEMPLATE.format(
-            query, context, self.examples
-        )
+        user_message = self.USER_MESSAGE_TEMPLATE.format(query, context, self.examples)
         system_message = self.SYSTEM_MESSAGE
         message = [
             {"role": "system", "content": system_message},
@@ -81,9 +80,11 @@ class ContextRelevance:
         ]
 
         openai_response = self.openAIcompletion.get_completion_from_messages(message)
-        openai_response_json = self.openAIcompletion.extract_json_from_response(openai_response) 
+        openai_response_json = self.openAIcompletion.extract_json_from_response(
+            openai_response
+        )
         return openai_response_json
-    
+
     # Few shot examples
     @staticmethod
     def get_few_shot_examples():

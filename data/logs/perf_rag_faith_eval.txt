@@ -1,11 +1,11 @@
 Model: gpt-3.5-turbo
 
 Number of instances per Label:
-faithfull: 2
-unfaithfull: 2
+faithful: 2
+unfaithful: 2
 total: 4
 
-Average faithfullness_failure per Label:
-faithfull: 0.0
-unfaithfull: 1.0
+Average faithfulness_failure per Label:
+faithful: 0.0
+unfaithful: 1.0
 overall: 0.5

@@ -1,6 +1,7 @@
 from ..open_ai_completion import OpenAICompletion
 
-class FewShotExampleFaithfullness:
+
+class FewShotExampleFaithfulness:
     """
     Class represting an example of the evaluation that could be used for few-shot prompting.
     """
@@ -33,13 +34,14 @@ class FewShotExampleFaithfullness:
         self.eval_result = eval_result
         self.eval_reason = eval_reason
 
-class Faithfullness:
+
+class Faithfulness:
     """
     This class determines whether the chatbot's answer hether the response can be inferred using only the information provided as context.
 
     Attributes:
         openAIcompletion (OpenAICompletion): Instance for interactions with OpenAI's API.
-        examples (list[FewShotExampleFaithfullness]): List of few-shot examples used for evaluation.
+        examples (list[FewShotExampleFaithfulness]): List of few-shot examples used for evaluation.
     """
 
     # Pre-defined prompts for OpenAI's GPT model
@@ -67,7 +69,6 @@ class Faithfullness:
         self.openAIcompletion = OpenAICompletion(model, open_ai_key)
         self.examples = self.get_few_shot_examples()
 
-
     def evaluate(self, context: str, response: str):
         """
         Evaluation for is response faithful to context
@@ -82,16 +83,18 @@ class Faithfullness:
         ]
 
         openai_response = self.openAIcompletion.get_completion_from_messages(message)
-        openai_response_json = self.openAIcompletion.extract_json_from_response(openai_response) 
+        openai_response_json = self.openAIcompletion.extract_json_from_response(
+            openai_response
+        )
         return openai_response_json
-    
+
     @staticmethod
     def get_few_shot_examples():
         """
         Returns the few-shot examples.
         """
         # Creating instances of the FewShotExampleCcei class for each example
-        example1 = FewShotExampleFaithfullness(
+        example1 = FewShotExampleFaithfulness(
             context="Y Combinator is a startup accelerator launched in March 2005. It has been used to launch more than 4,000 companies",
             response="125,000",
             eval_function="is_response_faithful_to_context",
