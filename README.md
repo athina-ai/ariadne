@@ -15,7 +15,7 @@ or
 ```
 or
 
-see the provided notebook examples .
+see the provided [notebook examples](examples/)
 
 ## Text Summarization
 
@@ -46,7 +46,7 @@ Here is a breakdown of our approach:
 The following failure cases are detected:
 
 1. **Faithfulness Failure:** A faithfulness failure occurs if the response cannot be inferred purely from the context provided.
-2. **Context Relevance Failure:** A context relevance failure (bad retrieval) occures if the user's query cannot be answered purely from the retrieved context..
+2. **Context Relevance Failure:** A context relevance failure (bad retrieval) occures if the user's query cannot be answered purely from the retrieved context.
 3. **Answer Relevance Failure:** An answer relevacne failure occurs if the response does not answer the question.
 
 
