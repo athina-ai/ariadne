@@ -1,0 +1,26 @@
+Number of Questions: 5
+Model: gpt-3.5-turbo
+
+Number of instances per Label:
+nan: 1
+intrinsic: 1
+extrinsic: 1
+total: 3
+
+Average hallucination_failure per Label:
+nan: 1.0
+intrinsic: 0.0
+extrinsic: 1.0
+overall: 0.6666666666666666
+
+Average contradiction_failure per Label:
+nan: 0.0
+intrinsic: 1.0
+extrinsic: 1.0
+overall: 0.6666666666666666
+
+Average agreement_score per Label:
+nan: 0.4
+intrinsic: 0.6
+extrinsic: 0.2
+overall: 0.39999999999999997
