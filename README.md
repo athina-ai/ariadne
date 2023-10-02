@@ -7,39 +7,16 @@ Ariadne AI is an open-source library for evaluating text summarization and retir
 ```bash
 pip install ariadne-ai
 ```
-
-## Text Summarization Usage
-Here's a simple usage example to load a json file for text summarization.
-```python
-loader = TextSummarizationLoader(format = 'json')
-loader.load("path_to_your_file.json")
-text_summarization_evaluator = SummarizationHallucinationEvaluator(text_summarization_loader)
-text_summarization_evaluator.run()
-```
-or run
-
-```python
- poetry run python example.py
-```
-
-## RAG Usage 
-```python
-loader = RagLoader(
-    col_question= 'question', 
-    col_context='context', 
-    col_answer= 'answer', 
-    col_label ='label')
-
-# Faithfullness
-loader.load(INPUT_FILEPATH)
-evaluator = FaithfulnessEvaluator(loader)
-evaluator.run()
-```
-or
+or 
 
 ```python
  poetry run python run_experiment_rag.py
+ poetry run python run_experiment_summarization.py
 ```
+or
+
+see the provided notebook examples .
+
 ## Text Summarization
 
 ![Text Summarization QAG Approach](docs/QAG_approach.png)
