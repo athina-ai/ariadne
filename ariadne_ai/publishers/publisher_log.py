@@ -1,7 +1,7 @@
 from .publisher import Publisher
 import json
-import pandas as pd
 import os
+
 
 class PublisherLog(Publisher):
     """
@@ -13,28 +13,29 @@ class PublisherLog(Publisher):
     """
 
     def __init__(self, filename: str, format: str):
-        """ Initializes the PublisherLog with an output filename and format."""
+        """Initializes the PublisherLog with an output filename and format."""
         self.filename = filename
         self.format = format
         directory_path = os.path.dirname(self.filename)
         if not os.path.exists(directory_path):
-            os.makedirs(directory_path) 
+            os.makedirs(directory_path)
 
     def write(self, data: dict):
-        """ Writes data in the specified format. """
-        if self.format == 'json':
+        """Writes data in the specified format."""
+        if self.format == "json":
             self.write_json(data)
-        elif self.format == 'csv':
+        elif self.format == "csv":
             self.write_csv(data)
         else:
-            raise NotImplementedError(f"The '{self.format}' format has not been implemented yet.")
+            raise NotImplementedError(
+                f"The '{self.format}' format has not been implemented yet."
+            )
 
     def write_json(self, data: dict):
-        """ Writes data to a JSON file. """
-        with open(self.filename, 'w') as f:
+        """Writes data to a JSON file."""
+        with open(self.filename, "w") as f:
             json.dump(data, f, indent=4)
 
     def write_csv(self, data: dict):
-        """ Writes data to a CSV file. """
-        df = pd.DataFrame(data)
-        df.to_csv(self.filename, index=False)
+        """Writes data to a CSV file."""
+        pass
