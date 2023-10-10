@@ -1,4 +1,5 @@
 from ..open_ai_completion import OpenAICompletion
+from typing import Optional
 
 
 class FewShotExampleContextRelevance:
@@ -40,11 +41,11 @@ class ContextRelevance:
     This class determines whether the chatbot's response can be inferred using only the information provided as context.
 
     Attributes:
-        openAIcompletion (OpenAICompletion): Instance for interactions with OpenAI's API.
+        open_ai_completion (OpenAICompletion): Instance for interactions with OpenAI's API.
         examples (list[FewShotExampleFaithfulness]): List of few-shot examples used for evaluation.
     """
 
-    SYSTEM_MESSAGE = """ 
+    SYSTEM_MESSAGE_TEMPLATE = """
         You are an expert at evaluating whether a chatbot can answer a user's query using ONLY the information provided to you as context.
     """
 
@@ -53,34 +54,49 @@ class ContextRelevance:
         1. Consider the following: 
         user's query: {}.
         context:{}.
-        2. Determine if the chatbot can answer the user's query with nothing but the "context" information provided to you.
-        3. Provide a brief explanation of why the context does or does not contain sufficient information, labeled as 'explanation', leading up to a verdict (Yes/No) labeled as 'verdict'.
-        4. Return a JSON object in the following format: "verdict": 'verdict', "explanation": 'explanation'.
+        2. Make sure to also consider these instructions: {}
+        3. Determine if the chatbot can answer the user's query with nothing but the "context" information provided to you.
+        4. Provide a brief explanation of why the context does or does not contain sufficient information, labeled as 'explanation', leading up to a verdict (Yes/No) labeled as 'verdict'.
+        5. Return a JSON object in the following format: "verdict": 'verdict', "explanation": 'explanation'.
 
         Here's are some examples: 
         {}
     """
 
-    def __init__(self, model, open_ai_key):
+    def __init__(
+        self, model, open_ai_key, additional_instructions: Optional[str] = None
+    ):
         """
         Initialize the QuestionAnswerer class.
         """
-        self.openAIcompletion = OpenAICompletion(model, open_ai_key)
+        self.open_ai_completion = OpenAICompletion(model, open_ai_key)
         self.examples = self.get_few_shot_examples()
+        self.additional_instructions = additional_instructions
+
+    def system_message(self):
+        return self.SYSTEM_MESSAGE_TEMPLATE
+
+    def user_message(self, query, context):
+        if self.additional_instructions is None:
+            self.additional_instructions = ""
+
+        return self.USER_MESSAGE_TEMPLATE.format(
+            query, context, self.additional_instructions, self.examples
+        )
 
     def evaluate(self, query: str, context: str):
         """
         Evaluation for is response faithful to context
         """
-        user_message = self.USER_MESSAGE_TEMPLATE.format(query, context, self.examples)
-        system_message = self.SYSTEM_MESSAGE
+        user_message = self.user_message(query, context)
+        system_message = self.system_message()
         message = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_message},
         ]
 
-        openai_response = self.openAIcompletion.get_completion_from_messages(message)
-        openai_response_json = self.openAIcompletion.extract_json_from_response(
+        openai_response = self.open_ai_completion.get_completion_from_messages(message)
+        openai_response_json = self.open_ai_completion.extract_json_from_response(
             openai_response
         )
         return openai_response_json
