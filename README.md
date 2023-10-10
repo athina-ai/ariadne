@@ -52,7 +52,7 @@ The following failure cases are detected:
 
 ## Contribution 
 
-Please feel free to reach out to christos@athina.ai or shiv@athina.ai if you would like to contribute. You could find more on how you could integrate the evaluations in your product here: https://docs.athina.ai.
+Please feel free to reach out to shiv@athina.ai if you would like to contribute. You could find more on how you could integrate the evaluations in your product here: https://docs.athina.ai.
 
 
 ## License
