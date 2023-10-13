@@ -46,7 +46,8 @@ class OpenAICompletion:
                 temperature=temperature,
                 max_tokens=max_tokens,
             )
-        except openai.error.RateLimitError:
+        except openai.error.RateLimitError as e:
+            print("RateLimitError", e)
             # Calculate the wait time using exponential backoff
             base_wait_time = 15
             max_retries = 3
@@ -60,32 +61,35 @@ class OpenAICompletion:
                     messages, temperature, max_tokens, retry_count + 1
                 )
             else:
-                raise Exception("Unable to complete OpenAI request")
-        except openai.error.AuthenticationError:
+                print("Max retries reached - unable to complete OpenAI request")
+                raise e
+        except openai.error.AuthenticationError as e:
             raise openai.error.AuthenticationError("Please pass a valid OpenAi key.")
-        except openai.error.Timeout:
+        except openai.error.Timeout as e:
+            print("Timeout", e)
             # In case of a rate limit error, wait for 15 seconds and retry
             time.sleep(15)
-            print("Timeout")
             if retry_count < 3:
                 return self.get_completion_from_messages(
                     messages, retry_count=retry_count + 1
                 )
             else:
-                raise Exception("Unable to complete OpenAI request")
-        except openai.error.InvalidRequestError:
-            print("InvalidRequestError")
-            return None
-        except openai.error.APIConnectionError:
+                print("Max retries reached - unable to complete OpenAI request")
+                raise e
+        except openai.error.InvalidRequestError as e:
+            print("InvalidRequestError", e)
+            raise e
+        except openai.error.APIConnectionError as e:
             # In case of a api connection error, wait for 60 seconds and retry
-            time.sleep(60)
-            print("APIConnectionError")
+            time.sleep(30)
+            print("APIConnectionError", e)
             if retry_count < 3:
                 return self.get_completion_from_messages(
                     messages, retry_count=retry_count + 1
                 )
             else:
-                raise Exception("Unable to complete OpenAI request")
+                print("Max retries reached - unable to complete OpenAI request")
+                raise e
         return response.choices[0].message["content"]
 
     @staticmethod
