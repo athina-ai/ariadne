@@ -1,5 +1,5 @@
 from typing import Optional
-from ..open_ai_completion import OpenAICompletion
+from ..base_llm_evaluator import BaseLlmEvaluator
 
 
 class FewShotExampleFaithfulness:
@@ -36,12 +36,14 @@ class FewShotExampleFaithfulness:
         self.eval_reason = eval_reason
 
 
-class Faithfulness:
+class Faithfulness(BaseLlmEvaluator):
     """
     This class determines whether the chatbot's answer hether the response can be inferred using only the information provided as context.
 
     Attributes:
         open_ai_completion (OpenAICompletion): Instance for interactions with OpenAI's API.
+        athina_api_key (str): API key for Athina.
+        metadata (dict): Metadata for logging.
         examples (list[FewShotExampleFaithfulness]): List of few-shot examples used for evaluation.
     """
 
@@ -64,12 +66,19 @@ class Faithfulness:
     """
 
     def __init__(
-        self, model, open_ai_key, additional_instructions: Optional[str] = None
+        self,
+        model,
+        open_ai_key,
+        athina_api_key: Optional[str] = None,
+        metadata: Optional[dict] = None,
+        additional_instructions: Optional[str] = None,
     ):
-        """
-        Initialize the QuestionAnswerer class.
-        """
-        self.open_ai_completion = OpenAICompletion(model, open_ai_key)
+        super().__init__(
+            model,
+            open_ai_key=open_ai_key,
+            athina_api_key=athina_api_key,
+            metadata=metadata,
+        )
         self.examples = self.get_few_shot_examples()
         self.additional_instructions = additional_instructions
 
