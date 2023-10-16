@@ -3,6 +3,7 @@ from ...loaders.rag_loader import RagLoader
 from ...metrics.rag.answer_relevance_failure import AnswerRelevanceFailure
 from ...publishers.publisher_log import PublisherLog
 from ...llms.rag.answer_relevance import AnswerRelevance
+from typing import Optional
 
 
 class AnswerRelevanceEvaluator(RagEvaluator):
@@ -30,6 +31,7 @@ class AnswerRelevanceEvaluator(RagEvaluator):
         llm_model="gpt-3.5-turbo",
         metrics=["answer_relevance_failure"],
         open_ai_key=None,
+        additional_instructions: Optional[str] = None,
     ):
         """
         Initialize the evaluator with given parameters.
@@ -46,7 +48,9 @@ class AnswerRelevanceEvaluator(RagEvaluator):
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.llm_model = llm_model
-        self.answer_relevance_evaluator = AnswerRelevance(llm_model, open_ai_key)
+        self.answer_relevance_evaluator = AnswerRelevance(
+            llm_model, open_ai_key, additional_instructions=additional_instructions
+        )
         # Initialize logging
         self.log_format = log_format
         if log_format is not None:

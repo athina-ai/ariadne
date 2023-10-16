@@ -3,6 +3,7 @@ from ...loaders.rag_loader import RagLoader
 from ...metrics.rag.context_relevance_failure import ContextRelevanceFailure
 from ...publishers.publisher_log import PublisherLog
 from ...llms.rag.context_relevance import ContextRelevance
+from typing import Optional
 
 
 class ContextRelevanceEvaluator(RagEvaluator):
@@ -30,6 +31,7 @@ class ContextRelevanceEvaluator(RagEvaluator):
         llm_model="gpt-3.5-turbo",
         metrics=["context_relevance_failure"],
         open_ai_key=None,
+        additional_instructions: Optional[str] = None,
     ):
         """
         Initialize the evaluator with given parameters.
@@ -46,7 +48,9 @@ class ContextRelevanceEvaluator(RagEvaluator):
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.llm_model = llm_model
-        self.context_relevance_evaluator = ContextRelevance(llm_model, open_ai_key)
+        self.context_relevance_evaluator = ContextRelevance(
+            llm_model, open_ai_key, additional_instructions=additional_instructions
+        )
         # Initialize logging
         self.log_format = log_format
         if log_format is not None:

@@ -3,6 +3,7 @@ from ...loaders.rag_loader import RagLoader
 from ...metrics.rag.faithfulness_failure import FaithfulnessFailure
 from ...publishers.publisher_log import PublisherLog
 from ...llms.rag.faithfulness import Faithfulness
+from typing import Optional
 
 
 class FaithfulnessEvaluator(RagEvaluator):
@@ -30,6 +31,7 @@ class FaithfulnessEvaluator(RagEvaluator):
         llm_model="gpt-3.5-turbo",
         metrics=["faithfulness_failure"],
         open_ai_key=None,
+        additional_instructions: Optional[str] = None,
     ):
         """
         Initialize the evaluator with given parameters.
@@ -46,7 +48,9 @@ class FaithfulnessEvaluator(RagEvaluator):
         self.dataset = loader.processed_dataset
         # Intialize LLMs
         self.llm_model = llm_model
-        self.faithfulness_evaluator = Faithfulness(llm_model, open_ai_key)
+        self.faithfulness_evaluator = Faithfulness(
+            llm_model, open_ai_key, additional_instructions=additional_instructions
+        )
         # Initialize logging
         self.log_format = log_format
         if log_format is not None:

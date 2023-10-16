@@ -1,3 +1,4 @@
+from typing import Optional
 from ..open_ai_completion import OpenAICompletion
 
 
@@ -40,13 +41,12 @@ class Faithfulness:
     This class determines whether the chatbot's answer hether the response can be inferred using only the information provided as context.
 
     Attributes:
-        openAIcompletion (OpenAICompletion): Instance for interactions with OpenAI's API.
+        open_ai_completion (OpenAICompletion): Instance for interactions with OpenAI's API.
         examples (list[FewShotExampleFaithfulness]): List of few-shot examples used for evaluation.
     """
 
-    # Pre-defined prompts for OpenAI's GPT model
-    SYSTEM_MESSAGE = """ 
-        You are an expert at evaluating whether the response can be inferred using ONLY the information provided as context.
+    SYSTEM_MESSAGE_TEMPLATE = """
+        You are an expert at evaluating whether the response can be inferred using the information provided as context.
     """
 
     USER_MESSAGE_TEMPLATE = """
@@ -54,36 +54,50 @@ class Faithfulness:
         1. Consider the following: 
         context: {}.
         response:{}.
-        2. Determine if the response can be inferred purely from the context provided.
-        3. Provide a brief explanation of what information the response contained that was not provided to it in the context, labeled as 'explanation', leading up to a verdict (Yes/No) labeled as 'verdict'.
-        4. Return a JSON object in the following format: "verdict": 'verdict', "explanation": 'explanation'.
+        2. Make sure to also consider these instructions: {}
+        3. Determine if the response can be inferred from the context provided.
+        4. Provide a brief explanation of what information the response contained that was not provided to it in the context, labeled as 'explanation', leading up to a verdict (Yes/No) labeled as 'verdict'.
+        5. Return a JSON object in the following format: "verdict": 'verdict', "explanation": 'explanation'.
 
         Here's are some examples: 
         {}
     """
 
-    def __init__(self, model, open_ai_key):
+    def __init__(
+        self, model, open_ai_key, additional_instructions: Optional[str] = None
+    ):
         """
         Initialize the QuestionAnswerer class.
         """
-        self.openAIcompletion = OpenAICompletion(model, open_ai_key)
+        self.open_ai_completion = OpenAICompletion(model, open_ai_key)
         self.examples = self.get_few_shot_examples()
+        self.additional_instructions = additional_instructions
+
+    # Pre-defined prompts for OpenAI's GPT model
+    def system_message(self):
+        return self.SYSTEM_MESSAGE_TEMPLATE
+
+    def user_message(self, context, response):
+        if self.additional_instructions is None:
+            self.additional_instructions = ""
+
+        return self.USER_MESSAGE_TEMPLATE.format(
+            context, response, self.additional_instructions, self.examples
+        )
 
     def evaluate(self, context: str, response: str):
         """
         Evaluation for is response faithful to context
         """
-        user_message = self.USER_MESSAGE_TEMPLATE.format(
-            context, response, self.examples
-        )
-        system_message = self.SYSTEM_MESSAGE
+        user_message = self.user_message(context, response)
+        system_message = self.system_message()
         message = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_message},
         ]
 
-        openai_response = self.openAIcompletion.get_completion_from_messages(message)
-        openai_response_json = self.openAIcompletion.extract_json_from_response(
+        openai_response = self.open_ai_completion.get_completion_from_messages(message)
+        openai_response_json = self.open_ai_completion.extract_json_from_response(
             openai_response
         )
         return openai_response_json
