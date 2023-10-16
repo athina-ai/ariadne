@@ -1,9 +1,11 @@
 import openai
 import time
-from dotenv import load_dotenv
-
-import os
+import traceback
 import json
+from typing import Optional
+from athina_logger.inference_logger import InferenceLogger
+from athina_logger.api_key import AthinaApiKey
+from athina_logger.exception.custom_exception import CustomException
 
 
 class OpenAICompletion:
@@ -17,35 +19,86 @@ class OpenAICompletion:
     - max_tokens (int): OpenAI maximum number of tokens setting. The token count of your prompt plus max_tokens cannot exceed the model's context.
     """
 
-    def __init__(self, model, open_ai_key):
+    def __init__(
+        self,
+        model: str,
+        open_ai_key: str,
+        athina_api_key: Optional[str] = None,
+        metadata: Optional[dict] = None,
+    ):
         """
         Initializes the OpenAICompletion with the provided settings.
         """
         # Setting instance attributes based on provided parameters or defaults
-        load_dotenv()
         self.model = model
-        if open_ai_key is None:
-            self.open_ai_key = os.getenv("OPENAI_API_KEY")
-        else:
-            self.open_ai_key = open_ai_key
+        self.metadata = metadata
+        self.open_ai_key = open_ai_key
+        AthinaApiKey.set_api_key(athina_api_key)
 
         # Setting the API key for OpenAI based on provided key
         openai.api_key = self.open_ai_key
 
     def get_completion_from_messages(
-        self, messages, temperature=0, max_tokens=2000, retry_count=0
+        self,
+        messages,
+        temperature: float = 0,
+        max_tokens: int = 2000,
+        retry_count: int = 0,
     ):
         """
         Fetches a completion response from OpenAI's ChatCompletion API based on the provided messages.
         """
         try:
             # Attempting to fetch a response from OpenAI
+            start_time = time.time()
             response = openai.ChatCompletion.create(
                 model=self.model,
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
             )
+            end_time = time.time()
+            response_time_ms = int((end_time - start_time) * 1000)
+
+            # Logging the response to Athina
+            if self.metadata is None:
+                environment = None
+                prompt_slug = None
+                customer_id = None
+                customer_user_id = None
+                external_reference_id = None
+                session_id = None
+            else:
+                environment = (
+                    self.metadata["environment"]
+                    if self.metadata["environment"] is not None
+                    else "default"
+                )
+                prompt_slug = (
+                    self.metadata["prompt_slug"]
+                    if self.metadata["prompt_slug"] is not None
+                    else "default"
+                )
+                customer_id = (self.metadata["customer_id"],)
+                customer_user_id = (self.metadata["customer_user_id"],)
+                external_reference_id = (self.metadata["external_reference_id"],)
+                session_id = (self.metadata["session_id"],)
+
+            if AthinaApiKey.get_api_key() is not None:
+                InferenceLogger.log_open_ai_chat_response(
+                    prompt_slug=prompt_slug,
+                    messages=messages,
+                    model=self.model,
+                    completion=response,
+                    context=None,
+                    response_time=response_time_ms,
+                    customer_id=customer_id,
+                    customer_user_id=customer_user_id,
+                    external_reference_id=external_reference_id,
+                    session_id=session_id,
+                    environment=environment,
+                )
+
         except openai.error.RateLimitError as e:
             print("RateLimitError", e)
             # Calculate the wait time using exponential backoff
@@ -90,6 +143,10 @@ class OpenAICompletion:
             else:
                 print("Max retries reached - unable to complete OpenAI request")
                 raise e
+        except Exception as e:
+            print("Exception", e)
+            traceback.print_exc()
+            return None
         return response.choices[0].message["content"]
 
     @staticmethod

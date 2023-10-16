@@ -1,9 +1,10 @@
 from ..open_ai_completion import OpenAICompletion
 
+
 class QuestionAnswerer:
     """
-    This class determines whether the chatbot's answer was correct based on 
-    the given content and user's question. 
+    This class determines whether the chatbot's answer was correct based on
+    the given content and user's question.
 
     Attributes:
         openAIcompletion (OpenAICompletion): Instance for interactions with OpenAI's API.
@@ -39,17 +40,19 @@ class QuestionAnswerer:
             context (str): Context used to inform the chatbot's answers.
 
         Returns:
-            dict: Evaluation results formatted as a dictionary with questions as keys and 
+            dict: Evaluation results formatted as a dictionary with questions as keys and
                   'Yes', 'No', or 'Unknown' as values.
         """
-        
+
         user_message = self.USER_MESSAGE_TEMPLATE.format(questions, context)
         message = [
-            {'role': 'system', 'content': self.SYSTEM_MESSAGE}, 
-            {'role': 'user', 'content': user_message}
+            {"role": "system", "content": self.SYSTEM_MESSAGE},
+            {"role": "user", "content": user_message},
         ]
-        
+
         openai_response = self.openAIcompletion.get_completion_from_messages(message)
-        openai_response_json = self.openAIcompletion.extract_json_from_response(openai_response)
-        
+        openai_response_json = self.openAIcompletion.extract_json_from_response(
+            openai_response
+        )
+
         return openai_response_json

@@ -31,6 +31,8 @@ class AnswerRelevanceEvaluator(RagEvaluator):
         llm_model="gpt-3.5-turbo",
         metrics=["answer_relevance_failure"],
         open_ai_key=None,
+        athina_api_key: Optional[str] = None,
+        metadata: Optional[dict] = None,
         additional_instructions: Optional[str] = None,
     ):
         """
@@ -49,7 +51,11 @@ class AnswerRelevanceEvaluator(RagEvaluator):
         # Intialize LLMs
         self.llm_model = llm_model
         self.answer_relevance_evaluator = AnswerRelevance(
-            llm_model, open_ai_key, additional_instructions=additional_instructions
+            llm_model,
+            open_ai_key,
+            athina_api_key=athina_api_key,
+            metadata=metadata,
+            additional_instructions=additional_instructions,
         )
         # Initialize logging
         self.log_format = log_format
