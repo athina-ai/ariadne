@@ -141,13 +141,6 @@ class AnswerRelevance(BaseLlmEvaluator):
             eval_result="No",
             eval_reason="The response does not answer the query asking about the name of the spaceship.",
         )
-        example3 = FewShotExampleAnswertRelevance(
-            query="Will alicia keys be at the festival",
-            response="Neil Armstrong was the first astronaut on the moon",
-            eval_function="does_response_answer_query",
-            eval_result="Yes",
-            eval_reason="The response is a reasonable answer to the query.",
-        )
         # Joining the string representations of the instances
-        examples = "\n\n".join([str(example1), str(example2), str(example3)])
+        examples = "\n\n".join([str(example1), str(example2)])
         return examples
