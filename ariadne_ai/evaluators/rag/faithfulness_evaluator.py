@@ -94,13 +94,13 @@ class FaithfulnessEvaluator(RagEvaluator):
                 self.update_metric_aggr(metric, label, metric_result)
             self.n_instances = self.n_instances + 1
             self.label_counts[label] = self.label_counts.get(label, 0) + 1
-        log_instnace = {
+        log_instance = {
             "context": context,
             "answer": answer,
             "label": label,
             **metric_results,
         }
-        return log_instnace
+        return log_instance
 
     def update_metric_aggr(self, metric, label, aggr_score):
         """Update the aggregated score for a specific metric and label."""
@@ -154,6 +154,7 @@ class FaithfulnessEvaluator(RagEvaluator):
         for instance in self.dataset:
             log = self._evaluate_element(instance)
             self.logs.append(log)
+        self.generate_performance_report(self.performance_filepath)
         if self.log_format is not None:
             self.publisher_log.write(self.logs)
         return self.logs

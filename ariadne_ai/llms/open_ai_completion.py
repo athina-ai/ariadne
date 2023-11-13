@@ -160,8 +160,10 @@ class OpenAICompletion:
         """
         try:
             start_index = data_string.index("{")
-            json_string = data_string[start_index:]
-        except:
+            end_index = data_string.rfind("}")
+            json_string = data_string[start_index : end_index + 1]
+        except Exception as e:
+            print("Failed to extract json", e)
             json_string = data_string
         return json_string
 
@@ -172,7 +174,8 @@ class OpenAICompletion:
         """
         try:
             data = json.loads(text)
-        except json.decoder.JSONDecodeError:
+        except json.decoder.JSONDecodeError as e:
+            print("Failed to load JSON from text", e)
             data = None
         return data
 

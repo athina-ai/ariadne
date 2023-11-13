@@ -173,4 +173,5 @@ class InformativenessEvaluator(SummarizationEvaluator):
         for instance in self.dataset:
             log = self._evaluate_element(instance)
             self.logs.append(log)
+        self.generate_performance_report(self.performance_filepath)
         self.publisher_log.write(self.logs)
