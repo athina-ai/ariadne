@@ -154,7 +154,6 @@ class FaithfulnessEvaluator(RagEvaluator):
         for instance in self.dataset:
             log = self._evaluate_element(instance)
             self.logs.append(log)
-        self.generate_performance_report(self.performance_filepath)
         if self.log_format is not None:
             self.publisher_log.write(self.logs)
         return self.logs

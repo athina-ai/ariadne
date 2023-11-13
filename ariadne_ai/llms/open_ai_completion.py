@@ -85,19 +85,22 @@ class OpenAICompletion:
                 session_id = (self.metadata["session_id"],)
 
             if AthinaApiKey.get_api_key() is not None:
-                InferenceLogger.log_open_ai_chat_response(
-                    prompt_slug=prompt_slug,
-                    messages=messages,
-                    model=self.model,
-                    completion=response,
-                    context=None,
-                    response_time=response_time_ms,
-                    customer_id=customer_id,
-                    customer_user_id=customer_user_id,
-                    external_reference_id=external_reference_id,
-                    session_id=session_id,
-                    environment=environment,
-                )
+                try:
+                    InferenceLogger.log_open_ai_chat_response(
+                        prompt_slug=prompt_slug,
+                        messages=messages,
+                        model=self.model,
+                        completion=response,
+                        context=None,
+                        response_time=response_time_ms,
+                        customer_id=customer_id,
+                        customer_user_id=customer_user_id,
+                        external_reference_id=external_reference_id,
+                        session_id=session_id,
+                        environment=environment,
+                    )
+                except Exception as e:
+                    print("Failed to log to Athina", e)
 
         except openai.error.RateLimitError as e:
             print("RateLimitError", e)
