@@ -1,10 +1,11 @@
 from ..metric import Metric
 
+
 class AgreementScore(Metric):
     """
     Calculates agreement score between two sets of answers.
 
-    AgreementScore computes the proportion of questions that received 
+    AgreementScore computes the proportion of questions that received
     consistent answers between a source (e.g., document) and a summary.
     """
 
@@ -28,8 +29,8 @@ class AgreementScore(Metric):
             if ans_src.strip().lower() == ans_sum.strip().lower():
                 n_matches += 1
                 aggr_question = questions[f"question {idx+1}"]
-                aggr_questions.append(f'{aggr_question}')
-        return n_matches,aggr_questions
+                aggr_questions.append(f"{aggr_question}")
+        return n_matches, aggr_questions
 
     @staticmethod
     def compute(answers_src, answers_sum, questions, n_questions):
@@ -44,11 +45,9 @@ class AgreementScore(Metric):
         Returns:
             float: Agreement score.
         """
-        n_matches, aggr_questions = AgreementScore._compute_metric(answers_src, answers_sum, questions) 
+        n_matches, aggr_questions = AgreementScore._compute_metric(
+            answers_src, answers_sum, questions
+        )
         explanation = aggr_questions
         aggr_score = n_matches / n_questions
-        return aggr_score, explanation, None
-    
-
-
-   
+        return aggr_score, explanation

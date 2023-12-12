@@ -102,7 +102,7 @@ class InformativenessEvaluator(SummarizationEvaluator):
         else:
             for metric in self.metrics:
                 metric_class = self.metric_str_to_class.get(metric)
-                metric_result, explanation, score = metric_class.compute(
+                metric_result, explanation = metric_class.compute(
                     answers_doc, answers_sum, questions, self.n_questions
                 )
                 metric_results[metric] = metric_result

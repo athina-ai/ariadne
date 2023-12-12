@@ -2,7 +2,7 @@ from .summarization_evaluator import SummarizationEvaluator
 from ...loaders.summarization_loader import SummarizationLoader
 from ...metrics.text_summarization.aggreement_score import AgreementScore
 from ...metrics.text_summarization.contradiction_failure import ContradictionFailure
-from ...metrics.text_summarization.hallucination_failure import HallucinationfFailure
+from ...metrics.text_summarization.hallucination_failure import HallucinationFailure
 from ...publishers.publisher_log import PublisherLog
 from ...llms.text_summarization.question_generator import QuestionGenerator
 from ...llms.text_summarization.question_answerer import QuestionAnswerer
@@ -25,7 +25,7 @@ class HallucinationEvaluator(SummarizationEvaluator):
 
     metric_str_to_class = {
         "agreement_score": AgreementScore,
-        "hallucination_failure": HallucinationfFailure,
+        "hallucination_failure": HallucinationFailure,
         "contradiction_failure": ContradictionFailure,
     }
 
@@ -106,7 +106,7 @@ class HallucinationEvaluator(SummarizationEvaluator):
         else:
             for metric in self.metrics:
                 metric_class = self.metric_str_to_class.get(metric)
-                metric_result, explanation, score = metric_class.compute(
+                metric_result, explanation = metric_class.compute(
                     answers_doc, answers_sum, questions, self.n_questions
                 )
                 metric_results[metric] = metric_result
