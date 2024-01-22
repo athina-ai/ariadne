@@ -1,3 +1,9 @@
+### ⚠️ THIS REPOSITORY HAS MOVED ⚠️
+The latest version of this repository is now at https://github.com/athina-ai/athina-evals
+
+
+----------
+
 ## Overview
 Ariadne AI is an open-source library for evaluating text summarization and retireved-augmented-generation (RAG) chatbots without the necessity for human-annotated reference summaries. Each evaluator is paired with an explanation that help developers evaluate their LLMs and detect the reason for their failure cases. Our approach leverages LLM's reasoning to provide explanations for the failures. 
 
